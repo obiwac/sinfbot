@@ -90,10 +90,7 @@ module.exports = {
                         embeds: [
                             new MessageEmbed()
                                 .setTitle('WARNING')
-                                .setDescription(`Your confession "*${sin}*" has been rejected and you have been issued a
-                                 warn. Please note that confessions are **NOT** intended for this purpose. This includes
-                                  (but not limited to): asking questions about courses (refer to the channel in question
-                                  ), sexual/violent/discriminating content. Please do help keep this a safe space :)`)
+                                .setDescription(`Your confession "*${sin}*" has been rejected and you have been issued a warning. Please note that confessions are **NOT** intended for this purpose. This includes (but not limited to): asking questions about courses (refer to the channel in question), sexual/violent/discriminating content, or stuff that crosses the line of being a bit too edgy. Please do help keep this a safe space :)`)
                                 .setColor("ORANGE")
                         ]
                     })
