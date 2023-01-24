@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
+const {SlashCommandBuilder} = require('@discordjs/builders');
 const https = require('https');
 
 const toReplace = {
@@ -45,7 +45,9 @@ module.exports = {
                 res.on('end', () => {
                     const row = JSON.parse(data);
                     let text = row.text;
-                    Object.keys(toReplace).forEach((k) => {text=text.replaceAll(k, toReplace[k])})
+                    Object.keys(toReplace).forEach((k) => {
+                        text = text.replaceAll(k, toReplace[k])
+                    })
                     return interaction.reply(text);
                 });
             } else {

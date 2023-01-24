@@ -12,9 +12,9 @@ N'oublie pas de lire les règles
 
 /* The event is triggered when a user joins the server */
 module.exports = {
-  name: 'guildMemberAdd',
-  once: false,
-  execute(newMember) {
-    return newMember.send(WELCOME_MESSAGE)
-  },
+    name: 'guildMemberAdd',
+    once: false,
+    execute(newMember) {
+        return newMember.send(WELCOME_MESSAGE)
+    },
 }
