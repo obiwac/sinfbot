@@ -30,5 +30,10 @@ module.exports = {
 
         vote.react(IN_FAVOUR_REACTION);
         vote.react(AGAINST_REACTION);
+
+        const thread = await vote.threads.create({
+            name: `Suggestion de ${interaction.user.id}`,
+            autoArchiveDuration: 1800,
+        });
     }
 }
