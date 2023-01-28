@@ -13,7 +13,7 @@ module.exports = {
         .addStringOption(option =>
             option
                 .setName('suggestion')
-                .setDescription('a suggestion to make')
+                .setDescription('A suggestion to make. This is ***NOT*** anonymous.')
                 .setRequired(true),
         ),
 
