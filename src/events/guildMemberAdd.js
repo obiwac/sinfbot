@@ -15,6 +15,9 @@ module.exports = {
   name: 'guildMemberAdd',
   once: false,
   execute(newMember) {
+    if (newMember.username.toLowerCase().includes('reixam')) {
+      return newMember.ban('Reixam')
+    }
     return newMember.send(WELCOME_MESSAGE)
   },
 }
