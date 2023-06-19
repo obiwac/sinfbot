@@ -21,7 +21,7 @@ module.exports = {
         )
         .addAttachmentOption(option =>
             option
-                .setName("Image")
+                .setName("image")
                 .setRequired(false)
                 .setDescription("Attach an image with your confession !")
         ),
