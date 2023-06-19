@@ -18,6 +18,12 @@ module.exports = {
                 .setName('sin')
                 .setDescription('A sin to confess')
                 .setRequired(true),
+        )
+        .addAttachmentOption(option =>
+            option
+                .setName("Image")
+                .setRequired(false)
+                .setDescription("Attach an image with your confession !")
         ),
 
     async execute(client, interaction) {
