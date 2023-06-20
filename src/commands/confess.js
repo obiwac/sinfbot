@@ -65,7 +65,7 @@ module.exports = {
             if (reaction.emoji.name === IN_FAVOUR_REACTION) {
                 await vote.edit({
                     embeds: [
-                        new MessageEmbed()
+                        confessionEmbed
                             .setTitle('Confession approved')
                             .setDescription(sin)
                             .setColor('GREEN'),
@@ -89,7 +89,7 @@ module.exports = {
             } else if (reaction.emoji.name === WARN_USER_REACTION) {
                 await vote.edit({
                     embeds: [
-                        new MessageEmbed()
+                        confessionEmbed
                             .setTitle('Confession rejected and user warned')
                             .setDescription(sin)
                             .setColor('ORANGE')
@@ -109,7 +109,7 @@ module.exports = {
             } else {
                 await vote.edit({
                     embeds: [
-                        new MessageEmbed()
+                        confessionEmbed
                             .setTitle('Confession rejected')
                             .setDescription(sin)
                             .setColor('RED'),
@@ -138,7 +138,7 @@ module.exports = {
                 // Vote timed out
                 await vote.edit({
                     embeds: [
-                        new MessageEmbed()
+                        confessionEmbed
                             .setTitle('Vote timed out')
                             .setDescription(sin)
                             .setColor('ORANGE'),
