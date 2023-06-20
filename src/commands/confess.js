@@ -28,7 +28,7 @@ module.exports = {
 
     async execute(client, interaction) {
         const sin = interaction.options.getString('sin')
-        let messageAttachment = interaction.attachments.size > 0 ? interaction.attachments.array()[0].url : null
+        let messageAttachment = interaction.options.getAttachment("image")
         const adminChannel = await client.channels.fetch(process.env.ADMIN_CHANNEL_ID)
         const confessionChannel = await client.channels.fetch(process.env.CONFESSION_CHANNEL_ID)
 
@@ -38,7 +38,7 @@ module.exports = {
             .setColor('BLURPLE')
 
         if(messageAttachment !== null) {
-            confessionEmbed.setImage(messageAttachment)
+            confessionEmbed.setImage(messageAttachment.url)
         };
 
         let vote = await adminChannel.send({embeds: [confessionEmbed]})
