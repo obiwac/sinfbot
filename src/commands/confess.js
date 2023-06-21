@@ -18,10 +18,17 @@ module.exports = {
                 .setName('sin')
                 .setDescription('A sin to confess')
                 .setRequired(true),
+        )
+        .addAttachmentOption(option =>
+            option
+                .setName("image")
+                .setRequired(false)
+                .setDescription("Attach an image with your confession !")
         ),
 
     async execute(client, interaction) {
         const sin = interaction.options.getString('sin')
+        let messageAttachment = interaction.options.getAttachment("image")
         const adminChannel = await client.channels.fetch(process.env.ADMIN_CHANNEL_ID)
         const confessionChannel = await client.channels.fetch(process.env.CONFESSION_CHANNEL_ID)
 
@@ -29,6 +36,10 @@ module.exports = {
             .setTitle('New confession')
             .setDescription(sin)
             .setColor('BLURPLE')
+
+        if(messageAttachment !== null) {
+            confessionEmbed.setImage(messageAttachment.url)
+        };
 
         let vote = await adminChannel.send({embeds: [confessionEmbed]})
 
@@ -52,16 +63,17 @@ module.exports = {
             collector.stop()
 
             if (reaction.emoji.name === IN_FAVOUR_REACTION) {
+
+                await confessionChannel.send({embeds: [confessionEmbed]})
+
                 await vote.edit({
                     embeds: [
-                        new MessageEmbed()
+                        confessionEmbed
                             .setTitle('Confession approved')
                             .setDescription(sin)
                             .setColor('GREEN'),
                     ],
                 })
-
-                await confessionChannel.send({embeds: [confessionEmbed]})
 
                 await interaction.member
                     .send({
@@ -78,7 +90,7 @@ module.exports = {
             } else if (reaction.emoji.name === WARN_USER_REACTION) {
                 await vote.edit({
                     embeds: [
-                        new MessageEmbed()
+                        confessionEmbed
                             .setTitle('Confession rejected and user warned')
                             .setDescription(sin)
                             .setColor('ORANGE')
@@ -98,7 +110,7 @@ module.exports = {
             } else {
                 await vote.edit({
                     embeds: [
-                        new MessageEmbed()
+                        confessionEmbed
                             .setTitle('Confession rejected')
                             .setDescription(sin)
                             .setColor('RED'),
@@ -127,7 +139,7 @@ module.exports = {
                 // Vote timed out
                 await vote.edit({
                     embeds: [
-                        new MessageEmbed()
+                        confessionEmbed
                             .setTitle('Vote timed out')
                             .setDescription(sin)
                             .setColor('ORANGE'),
