@@ -63,6 +63,9 @@ module.exports = {
             collector.stop()
 
             if (reaction.emoji.name === IN_FAVOUR_REACTION) {
+
+                await confessionChannel.send({embeds: [confessionEmbed]})
+
                 await vote.edit({
                     embeds: [
                         confessionEmbed
@@ -71,8 +74,6 @@ module.exports = {
                             .setColor('GREEN'),
                     ],
                 })
-
-                await confessionChannel.send({embeds: [confessionEmbed]})
 
                 await interaction.member
                     .send({
