@@ -1,4 +1,6 @@
 const {SlashCommandBuilder} = require("@discordjs/builders")
+const fs = require('fs');
+const {check_interaction_privilege} = require("../utils/require_privilege");
 require("dotenv").config({path: "../.env"})
 
 module.exports = {
@@ -7,16 +9,8 @@ module.exports = {
         .setDescription('Meme contest creator'),
 
     async execute(client, interaction) {
-        const moderatorRole = process.env.MOD_ROLE_ID
-        const adminRole = process.env.ADMIN_ROLE_ID
-        console.log(moderatorRole)
+        check_interaction_privilege(interaction);
 
-        if (!interaction.member.roles.cache.has(moderatorRole) || !interaction.member.roles.cache.has(adminRole)) {
-            return interaction.reply({
-                content: "You do not have the permissions required to use this command",
-                ephemeral: true
-            })
-        }
         return interaction.reply({content: "Meme contest created (NOT FUNCTIONAL YET)", ephemeral: true})
     },
 }
