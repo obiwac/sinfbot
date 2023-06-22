@@ -1,0 +1,5 @@
+{
+  "started":"2019-09-07T15:50:00+000Z", // ISO8601 Time string
+  "ended":"2019-09-07T16:50:00+000Z", // ISO8601 Time string or null if the contest hasn't yet ended
+  "contest_channel_id": "12339388281" // Discord channel ID wherein the contest takes place
+}

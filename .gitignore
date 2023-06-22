@@ -8,3 +8,7 @@ channels.json*
 # editor-related stuff
 .sw[op]
 .idea
+
+# meme contest db
+./meme_constest/*.json
+!./meme_constest/example_contest.jsonc
