@@ -10,5 +10,5 @@ channels.json*
 .idea
 
 # meme contest db
-./meme_constest/*.json
-!./meme_constest/example_contest.jsonc
+meme_contest/
+!meme_contest/example_contest.jsonc

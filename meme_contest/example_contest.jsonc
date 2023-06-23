@@ -1,0 +1,14 @@
+{
+  "started":"2019-09-07T15:50:00+000Z", // ISO8601 Time string
+  "ended":"2019-09-07T16:50:00+000Z", // ISO8601 Time string or null if the contest hasn't yet ended
+  "contest_channel_id": "12339388281", // Discord channel ID wherein the contest takes place
+  "contest_reaction_id": "<:kekw:12345>", // Discord emote ID. Obtain it by typing \:emotename: in a discord chat
+  "contest_winner": 12345, // UserID of the contest winner
+  "posts": {                           //dictionary of posted memes
+        "1234567" : { //messageID of the posted meme and
+            "reactions": ["user1", "user2"], //list of users that reacted with the chosen reaction
+            "author": 12345, // Author UserID
+            "date": "2019-09-07T15:51:00+000Z" // ISO8601 Time String
+        }
+  }
+}
