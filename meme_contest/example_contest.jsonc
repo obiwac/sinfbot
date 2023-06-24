@@ -4,6 +4,7 @@
   "contest_channel_id": "12339388281", // Discord channel ID wherein the contest takes place
   "contest_reaction_id": "<:kekw:12345>", // Discord emote ID. Obtain it by typing \:emotename: in a discord chat
   "contest_winner": 12345, // UserID of the contest winner
+  "active": true,
   "posts": {                           //dictionary of posted memes
         "1234567" : { //messageID of the posted meme and
             "reactions": ["user1", "user2"], //list of users that reacted with the chosen reaction
