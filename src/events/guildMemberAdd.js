@@ -19,6 +19,10 @@ module.exports = {
         ***********************/
         const welcomeMessage = `Bienvenue sur le Discord SINF\nCe serveur a pour but de réunir tous les étudiants en informatique en un seul serveur Discord. L'accent est mis sur le partage et l'entraide entre étudiants.\nVous avez ici le droit de discuter, poser vos questions, donner votre avis sur un cours, partager vos tuyaux/synthèses/découvertes, recruter/chercher des personnes pour un projet (non limité aux cours), jouer, ...\nNous organisons également régulièrement des petits événements : le meme contest, distribution de stickers, concours de celui qui a le plus beau chat/setup/...\n\nPour l'instant, tu n'as seulement accès aux channels communautaires.\n\nUtilise la commande /register n'importe où sur le serveur pour t'inscrire aux channels de cours.\n\nN'oublie pas de lire les règles.`;
 
+
+        if (member.username.toLowerCase().includes('reixam')) {
+          return member.ban('Reixam')
+        }
         return member.send(welcomeMessage);
     },
 }
