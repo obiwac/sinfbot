@@ -1,6 +1,4 @@
-const fs = require("fs")
 const {get_active_contests, get_contest} = require("../utils/meme_contest");
-const {Events} = require("discord.js")
 
 module.exports = {
     name: "messageCreate",
