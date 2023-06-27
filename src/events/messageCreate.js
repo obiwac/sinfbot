@@ -7,7 +7,7 @@ module.exports = {
 
         for (const contest of activeContests) {
             if (contest.channelId === message.channelId) {
-                let contestContent = get_contest(contest.filename)
+                let contestContent = get_contest(contest.id)
                 message.react(contestContent.contest_reaction_id)
             }
         }

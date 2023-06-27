@@ -15,7 +15,7 @@ function check_ongoing_contests() {
 
         if (contest.active === true) {
             activeContests.push({
-                filename: file, channelId: contest.contest_channel_id
+                channelId: contest.contest_channel_id, id: contest.id
             })
         }
     }
@@ -25,8 +25,9 @@ function check_ongoing_contests() {
 
 let activeContests = [];
 
-function get_contest(filename) {
-    return JSON.parse(fs.readFileSync(`${MEME_CONTEST_DIRECTORY}${filename}`))
+function get_contest(id) {
+
+    return JSON.parse(fs.readFileSync(`${MEME_CONTEST_DIRECTORY}${id}.json`))
 }
 
 module.exports = {
