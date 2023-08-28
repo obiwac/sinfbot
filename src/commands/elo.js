@@ -1,5 +1,4 @@
-const { SlashCommandBuilder } = require('@discordjs/builders')
-const { MessageEmbed } = require('discord.js')
+const { EmbedBuilder, SlashCommandBuilder } = require('@discordjs/builders')
 
 const https = require('https')
 
@@ -39,7 +38,7 @@ module.exports = {
         res.on('end', () => {
           const player = JSON.parse(data)
           const { chess_bullet, chess_blitz, chess_rapid } = player
-          const embed = new MessageEmbed()
+          const embed = new EmbedBuilder()
             .setTitle('elo')
             .setDescription(username)
             .setAuthor(interaction.user.username)
@@ -68,7 +67,7 @@ module.exports = {
           const message = interaction.fetchReply()
         })
       } else if (res.statusCode === 404) {
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
           .setTitle('ERREUR')
           .setDescription(`${username} pas trouvé sur chess.com`)
           .setAuthor(interaction.user.username)
@@ -79,7 +78,7 @@ module.exports = {
         interaction.reply({ embeds: [embed] })
         const message = interaction.fetchReply()
       } else {
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
           .setTitle('ERREUR')
           .setDescription(`Erreur lors de la recherche des ratings`)
           .setAuthor(interaction.user.username)
@@ -93,7 +92,7 @@ module.exports = {
     })
 
     req.on('error', error => {
-      const embed = new MessageEmbed()
+      const embed = new EmbedBuilder()
         .setTitle('ERREUR')
         .setDescription(`Il y a eu une erreur lors de la recherche.`)
         .setAuthor(interaction.user.username)

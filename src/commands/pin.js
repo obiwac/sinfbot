@@ -1,5 +1,4 @@
-const { SlashCommandBuilder } = require("@discordjs/builders");
-const { MessageEmbed, CommandInteractionOptionResolver } = require("discord.js");
+const { EmbedBuilder, SlashCommandBuilder } = require("@discordjs/builders");
 
 const ROLE_NAME = "Pineur";
 const VOTE_MINUTES = 20;
@@ -19,7 +18,7 @@ const ICONS = {
 };
 
 function gen_rich(content, icon, colour) {
-	const embed = new MessageEmbed()
+	const embed = new EmbedBuilder()
 		.setTitle("Pin vote")
 		.setDescription(content)
 		.setThumbnail(ICONS[icon])
@@ -61,7 +60,7 @@ module.exports = {
 
 		let rv = interaction.reply({ content: "Insufficient privileges to pin this message!", ephemeral: true });
 
-		const rich = gen_rich(`${interaction.user.tag} has insufficient privileges to pin this message! We will now proceed to a vote! After ${VOTE_MINUTES} minutes, if there are at least ${VOTE_THRESHOLD} votes in favour of this pin and there are more people in favour than against it, your message will be pinned!`, "angry", "BLURPLE");
+		const rich = gen_rich(`${interaction.user.tag} has insufficient privileges to pin this message! We will now proceed to a vote! After ${VOTE_MINUTES} minutes, if there are at least ${VOTE_THRESHOLD} votes in favour of this pin and there are more people in favour than against it, your message will be pinned!`, "angry", 0x5865F2);
 		let vote = await message.reply({ embeds: [rich] });
 
 		vote.react(IN_FAVOUR_REACTION);
@@ -102,14 +101,14 @@ module.exports = {
 				cancelled = true;
 
 				if (name === IN_FAVOUR_REACTION) {
-					const rich = gen_rich(`User with the ${ROLE_NAME} role (${user.tag}) voted to pin the message! Message will now be pinned!`, "salute", "GREEN");
+					const rich = gen_rich(`User with the ${ROLE_NAME} role (${user.tag}) voted to pin the message! Message will now be pinned!`, "salute", 0x00ff00);
 					vote.reply({ embeds: [rich] });
 
 					message.pin();
 					return;
 				}
 
-				const rich = gen_rich(`User with the ${ROLE_NAME} role (${user.tag}) voted to dismiss the message. Message will not be pinned.`, "uncool", "RED");
+				const rich = gen_rich(`User with the ${ROLE_NAME} role (${user.tag}) voted to dismiss the message. Message will not be pinned.`, "uncool", 0xff0000);
 				vote.reply({ embeds: [rich] });
 
 				return;
@@ -139,15 +138,15 @@ module.exports = {
 				let rich;
 
 				if (in_favour == 0) {
-					rich = gen_rich(`No one voted in favour of pinning this message (threshold is ${VOTE_THRESHOLD}). Message will not be pinned.`, "silly", "RED");
+					rich = gen_rich(`No one voted in favour of pinning this message (threshold is ${VOTE_THRESHOLD}). Message will not be pinned.`, "silly", 0xff0000);
 				}
 
 				else if (in_favour == 1) {
-					rich = gen_rich(`Only one person voted in favour of pinning this message (threshold is ${VOTE_THRESHOLD}). Message will not be pinned.`, "sadge", "RED");
+					rich = gen_rich(`Only one person voted in favour of pinning this message (threshold is ${VOTE_THRESHOLD}). Message will not be pinned.`, "sadge", 0xff0000);
 				}
 
 				else {
-					rich = gen_rich(`Only ${in_favour} people voted in favour of pinning this message (threshold is ${VOTE_THRESHOLD}). Message will not be pinned.`, "uncool", "RED");
+					rich = gen_rich(`Only ${in_favour} people voted in favour of pinning this message (threshold is ${VOTE_THRESHOLD}). Message will not be pinned.`, "uncool", 0xff0000);
 				}
 
 				vote.reply({ embeds: [rich] });
@@ -155,7 +154,7 @@ module.exports = {
 			}
 
 			if (against >= in_favour) {
-				const rich = gen_rich(`More or the same number of people voted against the pin as in favour of the pin (${against} vs ${in_favour}). Message will not be pinned.`, "waah", "RED");
+				const rich = gen_rich(`More or the same number of people voted against the pin as in favour of the pin (${against} vs ${in_favour}). Message will not be pinned.`, "waah", 0xff0000);
 
 				vote.reply({ embeds: [rich] });
 				return;
@@ -163,7 +162,7 @@ module.exports = {
 
 			// finally, pin the message
 
-			const rich = gen_rich("Vote was successful! Message will now be pinned!", "salute", "GREEN");
+			const rich = gen_rich("Vote was successful! Message will now be pinned!", "salute", 0x00ff00);
 			vote.reply({ embeds: [rich] });
 
 			message.pin();

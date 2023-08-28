@@ -1,7 +1,6 @@
 // TODO combine common functions between this & pin.js (and perhaps also the voting system from confess.js)
 
-const { SlashCommandBuilder } = require("@discordjs/builders");
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder, SlashCommandBuilder } = require("@discordjs/builders");
 
 const ROLE_NAME = "Pineur";
 const VOTE_MINUTES = 20;
@@ -21,7 +20,7 @@ const ICONS = {
 };
 
 function gen_rich(content, icon, colour) {
-	const embed = new MessageEmbed()
+	const embed = new EmbedBuilder()
 		.setTitle("Unpin vote")
 		.setDescription(content)
 		.setThumbnail(ICONS[icon])

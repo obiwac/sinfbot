@@ -1,10 +1,10 @@
-const { SlashCommandBuilder } = require('@discordjs/builders')
-const { MessageEmbed } = require('discord.js')
+const { EmbedBuilder, SlashCommandBuilder } = require('@discordjs/builders')
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('thanks')
     .setDescription('Return the list of my contributors'),
+    
   async execute(client, interaction) {
     contributor = require('child_process')
       .execSync(
@@ -12,7 +12,7 @@ module.exports = {
       )
       .toString()
 
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setTitle('Thanks')
       .setDescription(contributor)
       .setAuthor(interaction.user.username)

@@ -12,7 +12,7 @@ module.exports = {
      * @returns 
      */
 
-    async execute(client, member) {
+    async execute(_, member) {
         /**********************
             \n = New line
             \n\n = Empty line between two lines of text
@@ -21,8 +21,9 @@ module.exports = {
 
 
         if (member.username.toLowerCase().includes('reixam')) {
-          return member.ban('Reixam')
+            return member.ban('Reixam')
         }
+
         return member.send(welcomeMessage);
     },
 }

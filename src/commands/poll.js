@@ -1,5 +1,4 @@
-const { SlashCommandBuilder } = require('@discordjs/builders')
-const { MessageEmbed } = require('discord.js')
+const { EmbedBuilder, SlashCommandBuilder } = require('@discordjs/builders')
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -67,7 +66,7 @@ module.exports = {
       }
     }
 
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setTitle(question)
       .setDescription(poll_content)
       .setAuthor(interaction.user.username)
