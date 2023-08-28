@@ -25,9 +25,6 @@ The commands will be registered automatically.
       private channel (with a react) and the message will be then in the public channel)
 - [x] A bulk clear (`/clear <number_message>`)
 - [ ] A meme contest event creator (`/createcontest <channel_id> <emote> <start_date> <end_date>`) with the score
-
-  command
-
 - [x] A pin system for members with the role of pin management. (`/pin <message ID to pin>`)
 - [x] A welcoming DM to newcomers
 - [x] A poll system
