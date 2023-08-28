@@ -40,24 +40,27 @@ module.exports = {
     )
 
     const confessionEmbed = new EmbedBuilder()
-      .setTitle('New confession')
+      .setTitle('Confession')
       .setDescription(sin)
       .setColor(0x5865f2)
 
     const approveButton = new ButtonBuilder()
       .setCustomId('approve')
       .setLabel('Approve')
-      .setStyle(ButtonStyle.Danger)
+      .setStyle(ButtonStyle.Success)
+      .setEmoji({ name: '✅' })
 
     const rejectButton = new ButtonBuilder()
       .setCustomId('reject')
       .setLabel('Reject')
-      .setStyle(ButtonStyle.Danger)
+      .setStyle(ButtonStyle.Secondary)
+      .setEmoji({ name: '❌' })
 
     const warnButton = new ButtonBuilder()
       .setCustomId('warn')
       .setLabel('Warn')
       .setStyle(ButtonStyle.Danger)
+      .setEmoji({ name: '⚠️' })
 
     const row = new ActionRowBuilder().addComponents(
       approveButton,
@@ -87,10 +90,7 @@ module.exports = {
 
         await vote.edit({
           embeds: [
-            confessionEmbed
-              .setTitle('Confession approved')
-              .setDescription(sin)
-              .setColor(0x00ff00),
+            confessionEmbed.setTitle('Confession approved').setColor(0x00ff00),
           ],
           components: [],
         })
@@ -110,10 +110,7 @@ module.exports = {
       } else if (i.customId === 'reject') {
         await vote.edit({
           embeds: [
-            confessionEmbed
-              .setTitle('Confession rejected')
-              .setDescription(sin)
-              .setColor(0xff0000),
+            confessionEmbed.setTitle('Confession rejected').setColor(0xff0000),
           ],
           components: [],
         })
@@ -135,7 +132,6 @@ module.exports = {
           embeds: [
             confessionEmbed
               .setTitle('Confession rejected and user warned')
-              .setDescription(sin)
               .setColor(0xffa500),
           ],
           components: [],
@@ -161,10 +157,7 @@ module.exports = {
         // Vote timed out
         await vote.edit({
           embeds: [
-            confessionEmbed
-              .setTitle('Vote timed out')
-              .setDescription(sin)
-              .setColor(0x808080),
+            confessionEmbed.setTitle('Vote timed out').setColor(0x808080),
           ],
           components: [],
         })

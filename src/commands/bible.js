@@ -1,5 +1,5 @@
-const { SlashCommandBuilder } = require('@discordjs/builders')
 const https = require('https')
+const { SlashCommandBuilder } = require('@discordjs/builders')
 
 const toReplace = {
   God: 'Obo',

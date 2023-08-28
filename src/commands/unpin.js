@@ -95,7 +95,7 @@ module.exports = {
     const rich = gen_rich(
       `${interaction.user.tag} has insufficient privileges to unpin this message! We will now proceed to a vote! After ${VOTE_MINUTES} minutes, if there are at least ${VOTE_THRESHOLD} votes in favour of this unpin and there are more people in favour than against it, your message will be unpinned!`,
       'angry',
-      '#ff7733',
+      0xff7733,
     )
     let vote = await message.reply({ embeds: [rich] })
 
@@ -149,19 +149,19 @@ module.exports = {
           rich = gen_rich(
             `No one voted in favour of unpinning this message (threshold is ${VOTE_THRESHOLD}). Message will not be unpinned.`,
             'silly',
-            '#ff7777',
+            0xff7777,
           )
         } else if (in_favour == 1) {
           rich = gen_rich(
             `Only one person voted in favour of unpinning this message (threshold is ${VOTE_THRESHOLD}). Message will not be unpinned.`,
             'sadge',
-            '#ff7777',
+            0xff7777,
           )
         } else {
           rich = gen_rich(
             `Only ${in_favour} people voted in favour of unpinning this message (threshold is ${VOTE_THRESHOLD}). Message will not be unpinned.`,
             'uncool',
-            '#ff7777',
+            0xff7777,
           )
         }
 
@@ -173,7 +173,7 @@ module.exports = {
         const rich = gen_rich(
           `More or the same number of people voted against the unpin as in favour of the unpin (${against} vs ${in_favour}). Message will not be unpinned.`,
           'waah',
-          '#ff7777',
+          0xff7777,
         )
 
         vote.reply({ embeds: [rich] })
@@ -185,7 +185,7 @@ module.exports = {
       const rich = gen_rich(
         'Vote was successful! Message will now be unpinned!',
         'salute',
-        '#77ff77',
+        0x77ff77,
       )
       vote.reply({ embeds: [rich] })
 

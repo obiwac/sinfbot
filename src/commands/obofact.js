@@ -1,5 +1,5 @@
-const { SlashCommandBuilder } = require('@discordjs/builders')
 const https = require('https')
+const { SlashCommandBuilder } = require('@discordjs/builders')
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -24,7 +24,6 @@ module.exports = {
           const fact = JSON.parse(data)
           let sent = fact.value
           sent = sent.replaceAll('Chuck Norris', 'Obo')
-          console.log(sent)
           return interaction.reply(sent)
         })
       }
