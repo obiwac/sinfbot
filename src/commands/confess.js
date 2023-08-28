@@ -1,11 +1,8 @@
-const {SlashCommandBuilder} = require('@discordjs/builders')
-const {MessageEmbed} = require('discord.js')
+const { ActionRowBuilder, ButtonBuilder, EmbedBuilder, SlashCommandBuilder } = require('@discordjs/builders')
+const { ButtonStyle, ComponentType } = require('discord.js')
 require("dotenv").config({path: "../.env"})
 
 const VOTE_MINUTES = 60 * 24
-const IN_FAVOUR_REACTION = '✅'
-const AGAINST_REACTION = '❌'
-const WARN_USER_REACTION = '⚠️'
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -31,146 +28,147 @@ module.exports = {
         let messageAttachment = interaction.options.getAttachment("image")
         const adminChannel = await client.channels.fetch(process.env.ADMIN_CHANNEL_ID)
         const confessionChannel = await client.channels.fetch(process.env.CONFESSION_CHANNEL_ID)
-
-        const confessionEmbed = new MessageEmbed()
-            .setTitle('New confession')
+        
+        const confessionEmbed = new EmbedBuilder()
+            .setTitle("New confession")
             .setDescription(sin)
-            .setColor('BLURPLE')
+            .setColor(0x5865F2)
 
-        if(messageAttachment !== null) {
-            confessionEmbed.setImage(messageAttachment.url)
-        };
+        const approveButton = new ButtonBuilder()
+            .setCustomId("approve")
+            .setLabel("Approve")
+            .setStyle(ButtonStyle.Danger);
 
-        let vote = await adminChannel.send({embeds: [confessionEmbed]})
+        const rejectButton = new ButtonBuilder()
+            .setCustomId("reject")
+            .setLabel("Reject")
+            .setStyle(ButtonStyle.Danger);
 
-        vote.react(IN_FAVOUR_REACTION)
-        vote.react(AGAINST_REACTION)
-        vote.react(WARN_USER_REACTION)
+        const warnButton = new ButtonBuilder()
+            .setCustomId("warn")
+            .setLabel("Warn")
+            .setStyle(ButtonStyle.Danger);
 
-        const filter = (reaction, user) => {
-            return (
-                [IN_FAVOUR_REACTION, AGAINST_REACTION, WARN_USER_REACTION].includes(reaction.emoji.name) &&
-                user.id !== client.user.id
-            )
-        }
+        const row = new ActionRowBuilder()
+            .addComponents(approveButton, rejectButton, warnButton);
 
-        let collector = vote.createReactionCollector({
-            filter,
-            time: VOTE_MINUTES * 60 * 1000,
-        })
+        if (messageAttachment !== null) confessionEmbed.setImage(messageAttachment.url);
 
-        collector.on('collect', async (reaction, user) => {
-            collector.stop()
+        let vote = await adminChannel.send({ embeds: [confessionEmbed], components: [row] });
 
-            if (reaction.emoji.name === IN_FAVOUR_REACTION) {
+        const collector = vote.createMessageComponentCollector({ componentType: ComponentType.Button, time: VOTE_MINUTES * 60 * 1000});
 
+        collector.on("collect", async i => {
+            collector.stop();
+            i.deferUpdate(); // Acknoledges the interaction without doing anything
+
+            if (i.customId === "approve") {
                 await confessionChannel.send({embeds: [confessionEmbed]})
 
                 await vote.edit({
                     embeds: [
                         confessionEmbed
-                            .setTitle('Confession approved')
+                            .setTitle("Confession approved")
                             .setDescription(sin)
-                            .setColor('GREEN'),
+                            .setColor(0x00ff00)
                     ],
-                })
+                    components: []
+                });
 
                 await interaction.member
                     .send({
                         embeds: [
-                            new MessageEmbed()
-                                .setTitle('Confession approved')
+                            new EmbedBuilder()
+                                .setTitle("Confession approved")
                                 .setDescription(
                                     `Your confession "*${sin}*" was approved. It is now available publicly.`,
                                 )
-                                .setColor('GREEN'),
-                        ],
-                    })
-                    .catch(() => undefined)
-            } else if (reaction.emoji.name === WARN_USER_REACTION) {
-                await vote.edit({
-                    embeds: [
-                        confessionEmbed
-                            .setTitle('Confession rejected and user warned')
-                            .setDescription(sin)
-                            .setColor('ORANGE')
-                    ]
-                })
-
-                await interaction.member
-                    .send({
-                        embeds: [
-                            new MessageEmbed()
-                                .setTitle('WARNING')
-                                .setDescription(`Your confession "*${sin}*" has been rejected and you have been issued a warning. Please note that confessions are **NOT** intended for this purpose. This includes (but not limited to): asking questions about courses (refer to the channel in question), sexual/violent/discriminating content, or stuff that crosses the line of being a bit too edgy. Please do help keep this a safe space :)`)
-                                .setColor("ORANGE")
+                                .setColor(0x00ff00)
                         ]
                     })
-                    .catch(() => undefined)
-            } else {
+                    .catch(() => undefined);
+            } else if (i.customId === "reject") {
                 await vote.edit({
                     embeds: [
                         confessionEmbed
                             .setTitle('Confession rejected')
                             .setDescription(sin)
-                            .setColor('RED'),
+                            .setColor(0xff0000)
                     ],
-                })
+                    components: []
+                });
 
                 await interaction.member
                     .send({
                         embeds: [
-                            new MessageEmbed()
-                                .setTitle('Confession rejected')
+                            new EmbedBuilder()
+                                .setTitle("Confession rejected")
                                 .setDescription(
                                     `Your confession "*${sin}*" was rejected by God himself. Therefore, it will not be shared publicly.`,
                                 )
-                                .setColor('RED'),
-                        ],
+                                .setColor(0xff0000)
+                        ]
                     })
-                    .catch(() => undefined)
-            }
-        })
-
-        collector.on('end', async (collected, reason) => {
-            vote.reactions.removeAll()
-
-            if (reason === 'time') {
-                // Vote timed out
+                    .catch(() => undefined);
+            } else {
                 await vote.edit({
                     embeds: [
                         confessionEmbed
-                            .setTitle('Vote timed out')
+                            .setTitle("Confession rejected and user warned")
                             .setDescription(sin)
-                            .setColor('ORANGE'),
+                            .setColor(0xffa500)
                     ],
-                })
+                    components: []
+                });
 
                 await interaction.member
                     .send({
                         embeds: [
-                            new MessageEmbed()
-                                .setTitle('Confession rejected')
-                                .setDescription(
-                                    `Your confession "*${sin}*" received no votes (God seems to be busy). It was therefore rejected. However, you can resubmit it with the command /confess`,
-                                )
-                                .setColor('ORANGE'),
-                        ],
+                            new EmbedBuilder()
+                                .setTitle("WARNING")
+                                .setDescription(`Your confession "*${sin}*" has been rejected and you have been issued a warning. Please note that confessions are **NOT** intended for this purpose. This includes (but not limited to): asking questions about courses (refer to the channel in question), sexual/violent/discriminating content, or stuff that crosses the line of being a bit too edgy. Please do help keep this a safe space :)`)
+                                .setColor(0xffa500)
+                        ]
                     })
-                    .catch(() => undefined)
+                    .catch(() => undefined);
             }
-        })
+        });
+
+        collector.on("end", async (_, reason) => {
+            if (reason === "time") { // Vote timed out
+                await vote.edit({
+                    embeds: [
+                        confessionEmbed
+                            .setTitle("Vote timed out")
+                            .setDescription(sin)
+                            .setColor(0x808080)
+                    ],
+                    components: []
+                });
+
+                await interaction.member.send({
+                    embeds: [
+                        new EmbedBuilder()
+                            .setTitle("Confession rejected")
+                            .setDescription(
+                                `Your confession "*${sin}*" received no votes (God seems to be busy). It was therefore rejected. You can however resubmit it with the command /confess`
+                            )
+                            .setColor(0x808080)
+                    ]
+                }).catch(() => undefined);
+            }
+        });
 
         return interaction.reply({
             embeds: [
-                new MessageEmbed()
+                new EmbedBuilder()
                     .setTitle('Confession sent')
                     .setDescription(
                         "Your confession has been sent and is awaiting verification. If your DM's are open to everyone, you'll be notified when it has been approved or rejected.",
                     )
-                    .setColor('BLURPLE'),
+                    .setColor(0x5865F2),
             ],
-            ephemeral: true,
-        })
+            ephemeral: true
+        });
     },
 }
