@@ -1,38 +1,43 @@
-const https = require('https')
-const { SlashCommandBuilder } = require('@discordjs/builders')
+const { SlashCommandBuilder } = require('@discordjs/builders');
+const https = require('https');
+
 
 module.exports = {
-  data: new SlashCommandBuilder()
-    .setName('obofact')
-    .setDescription('Returns a Obo fact'),
+    data: new SlashCommandBuilder()
+        .setName('obofact')
+        .setDescription('Returns a Obo fact'),
 
-  async execute(_, interaction) {
-    const options = {
-      hostname: 'api.chucknorris.io',
-      path: '/jokes/random',
-      method: 'GET',
-    }
+    async execute(client, interaction) {
 
-    const req = https.request(options, res => {
-      let data = ''
-      if (res.statusCode === 200) {
-        res.on('data', d => {
-          data += d
-        })
+        const options = {
+            hostname: 'api.chucknorris.io',
+            path: '/jokes/random',
+            method: 'GET'
+        };
 
-        res.on('end', () => {
-          const fact = JSON.parse(data)
-          let sent = fact.value
-          sent = sent.replaceAll('Chuck Norris', 'Obo')
-          return interaction.reply(sent)
-        })
-      }
-    })
+        const req = https.request(options, res => {
 
-    req.on('error', error => {
-      return interaction.reply('Error while trying to get Obo fact')
-    })
+            let data = "";
+            if (res.statusCode === 200) {
+                res.on('data', d => {
+                    data += d;
+                });
 
-    req.end()
-  },
-}
+                res.on('end', () => {
+                    const fact = JSON.parse(data);
+                    let sent = fact.value;
+                    sent = sent.replaceAll('Chuck Norris', 'Obo');
+                    console.log(sent);
+                    return interaction.reply(sent);
+                });
+            }
+        });
+
+        req.on('error', error => {
+            return interaction.reply("Error while trying to get Obo fact");
+        });
+
+        req.end();
+
+    },
+};

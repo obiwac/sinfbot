@@ -1,5 +1,7 @@
+const { SlashCommandBuilder } = require('@discordjs/builders')
+const { MessageEmbed } = require('discord.js')
+
 const https = require('https')
-const { EmbedBuilder, SlashCommandBuilder } = require('@discordjs/builders')
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -12,7 +14,7 @@ module.exports = {
         .setRequired(true),
     ),
 
-  async execute(_, interaction) {
+  async execute(client, interaction) {
     let username = interaction.options.getString('username')
     username = username.toLowerCase()
 
@@ -37,14 +39,11 @@ module.exports = {
         res.on('end', () => {
           const player = JSON.parse(data)
           const { chess_bullet, chess_blitz, chess_rapid } = player
-          const embed = new EmbedBuilder()
+          const embed = new MessageEmbed()
             .setTitle('elo')
             .setDescription(username)
-            .setAuthor({
-              name: interaction.user.username,
-              iconURL: interaction.user.avatarURL(),
-            })
-            .setColor(0x0099ff)
+            .setAuthor(interaction.user.username)
+            .setColor('#0099ff')
             .setThumbnail(
               'https://images.chesscomfiles.com/uploads/v1/images_users/tiny_mce/SamCopeland/phpmeXx6V.png',
             )
@@ -66,49 +65,44 @@ module.exports = {
               },
             )
           interaction.reply({ embeds: [embed] })
+          const message = interaction.fetchReply()
         })
       } else if (res.statusCode === 404) {
-        const embed = new EmbedBuilder()
-          .setTitle('Erreur')
+        const embed = new MessageEmbed()
+          .setTitle('ERREUR')
           .setDescription(`${username} pas trouvé sur chess.com`)
-          .setAuthor({
-            name: interaction.user.username,
-            iconURL: interaction.user.avatarURL(),
-          })
-          .setColor(0xff1919)
+          .setAuthor(interaction.user.username)
+          .setColor('#FF1919')
           .setThumbnail(
             'https://images.chesscomfiles.com/uploads/v1/images_users/tiny_mce/SamCopeland/phpmeXx6V.png',
           )
-        interaction.reply({ embeds: [embed], ephemeral: true })
+        interaction.reply({ embeds: [embed] })
+        const message = interaction.fetchReply()
       } else {
-        const embed = new EmbedBuilder()
-          .setTitle('Erreur')
+        const embed = new MessageEmbed()
+          .setTitle('ERREUR')
           .setDescription(`Erreur lors de la recherche des ratings`)
-          .setAuthor({
-            name: interaction.user.username,
-            iconURL: interaction.user.avatarURL(),
-          })
-          .setColor(0xff1919)
+          .setAuthor(interaction.user.username)
+          .setColor('#FF1919')
           .setThumbnail(
             'https://images.chesscomfiles.com/uploads/v1/images_users/tiny_mce/SamCopeland/phpmeXx6V.png',
           )
-        interaction.reply({ embeds: [embed], ephemeral: true })
+        interaction.reply({ embeds: [embed] })
+        const message = interaction.fetchReply()
       }
     })
 
-    req.on('error', _ => {
-      const embed = new EmbedBuilder()
-        .setTitle('Erreur')
+    req.on('error', error => {
+      const embed = new MessageEmbed()
+        .setTitle('ERREUR')
         .setDescription(`Il y a eu une erreur lors de la recherche.`)
-        .setAuthor({
-          name: interaction.user.username,
-          iconURL: interaction.user.avatarURL(),
-        })
-        .setColor(0xff1919)
+        .setAuthor(interaction.user.username)
+        .setColor('#FF1919')
         .setThumbnail(
           'https://images.chesscomfiles.com/uploads/v1/images_users/tiny_mce/SamCopeland/phpmeXx6V.png',
         )
-      interaction.reply({ embeds: [embed], ephemeral: true })
+      interaction.reply({ embeds: [embed] })
+      const message = interaction.fetchReply()
     })
 
     req.end()

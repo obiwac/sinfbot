@@ -1,15 +1,15 @@
-const https = require('https')
 const { SlashCommandBuilder } = require('@discordjs/builders')
+const https = require('https')
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('pokémon')
-    .setDescription('Returns the image of a pokémon')
+    .setDescription('Returns the image of the pokemon')
     .addIntegerOption(option =>
-      option.setName('id').setDescription('Pokémon id').setRequired(true),
+      option.setName('id').setDescription('pokemon id'),
     ),
 
-  async execute(_, interaction) {
+  async execute(client, interaction) {
     const id = interaction.options.getInteger('id')
 
     const options = {
@@ -34,11 +34,11 @@ module.exports = {
       } else if (res.statusCode === 404) {
         return interaction.reply(`${id} not found!`)
       } else {
-        return interaction.reply('Error while trying to search for pokemon')
+        return interaction.reply(`Error while trying to search for pokemon`)
       }
     })
 
-    req.on('error', _ => {
+    req.on('error', error => {
       return interaction.reply('Error while trying to search for pokemon')
     })
 
