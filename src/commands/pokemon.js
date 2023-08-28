@@ -9,7 +9,7 @@ module.exports = {
       option.setName('id').setDescription('pokemon id'),
     ),
 
-  async execute(client, interaction) {
+  async execute(_, interaction) {
     const id = interaction.options.getInteger('id')
 
     const options = {
@@ -38,7 +38,7 @@ module.exports = {
       }
     })
 
-    req.on('error', error => {
+    req.on('error', _ => {
       return interaction.reply('Error while trying to search for pokemon')
     })
 

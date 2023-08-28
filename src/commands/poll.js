@@ -17,7 +17,7 @@ module.exports = {
       option.setName('answers').setDescription('Possible poll answers'),
     ),
 
-  async execute(client, interaction) {
+  async execute(_, interaction) {
     const question = interaction.options.getString('question')
     const answers = interaction.options
       .getString('answers')

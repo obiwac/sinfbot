@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders')
+const { PermissionsBitField } = require('discord.js')
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -10,11 +11,14 @@ module.exports = {
         .setDescription('Number of messages to prune')
         .setRequired(true),
     ),
+
   async execute(client, interaction) {
     const amount = interaction.options.getInteger('amount')
 
     if (
-      !interaction.member.permissions.has(Permissions.FLAGS.MANAGE_MESSAGES)
+      !interaction.member.permissions.has(
+        PermissionsBitField.Flags.ManageMessages,
+      )
     ) {
       return interaction.reply({
         content: "You don't have the permission to do that.",

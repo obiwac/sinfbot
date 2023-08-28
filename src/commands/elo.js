@@ -42,7 +42,7 @@ module.exports = {
             .setTitle('elo')
             .setDescription(username)
             .setAuthor(interaction.user.username)
-            .setColor('#0099ff')
+            .setColor(0x0099ff)
             .setThumbnail(
               'https://images.chesscomfiles.com/uploads/v1/images_users/tiny_mce/SamCopeland/phpmeXx6V.png',
             )
@@ -71,7 +71,7 @@ module.exports = {
           .setTitle('ERREUR')
           .setDescription(`${username} pas trouvé sur chess.com`)
           .setAuthor(interaction.user.username)
-          .setColor('#FF1919')
+          .setColor(0xff1919)
           .setThumbnail(
             'https://images.chesscomfiles.com/uploads/v1/images_users/tiny_mce/SamCopeland/phpmeXx6V.png',
           )
@@ -82,7 +82,7 @@ module.exports = {
           .setTitle('ERREUR')
           .setDescription(`Erreur lors de la recherche des ratings`)
           .setAuthor(interaction.user.username)
-          .setColor('#FF1919')
+          .setColor(0xff1919)
           .setThumbnail(
             'https://images.chesscomfiles.com/uploads/v1/images_users/tiny_mce/SamCopeland/phpmeXx6V.png',
           )
@@ -96,7 +96,7 @@ module.exports = {
         .setTitle('ERREUR')
         .setDescription(`Il y a eu une erreur lors de la recherche.`)
         .setAuthor(interaction.user.username)
-        .setColor('#FF1919')
+        .setColor(0xff1919)
         .setThumbnail(
           'https://images.chesscomfiles.com/uploads/v1/images_users/tiny_mce/SamCopeland/phpmeXx6V.png',
         )
