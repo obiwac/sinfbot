@@ -1,5 +1,4 @@
-const { SlashCommandBuilder } = require('@discordjs/builders')
-const { MessageEmbed } = require('discord.js')
+const { EmbedBuilder, SlashCommandBuilder } = require('@discordjs/builders')
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -18,7 +17,7 @@ module.exports = {
       option.setName('answers').setDescription('Possible poll answers'),
     ),
 
-  async execute(client, interaction) {
+  async execute(_, interaction) {
     const question = interaction.options.getString('question')
     const answers = interaction.options
       .getString('answers')
@@ -67,11 +66,14 @@ module.exports = {
       }
     }
 
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setTitle(question)
-      .setDescription(poll_content)
-      .setAuthor(interaction.user.username)
-      .setColor(interaction.user.accent_color)
+      .setDescription(poll_content === '' ? null : poll_content)
+      .setAuthor({
+        name: interaction.user.username,
+        iconURL: interaction.user.avatarURL(),
+      })
+      .setColor(0x5865f2)
       .setThumbnail(
         'https://cdn.discordapp.com/emojis/770002495614877738.png?size=44',
       )
