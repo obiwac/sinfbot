@@ -1,5 +1,3 @@
-const { GuildMember, Client } = require(`discord.js`)
-
 module.exports = {
   name: 'interactionCreate', // Triggered when someone interacts with the bot
   once: false,
