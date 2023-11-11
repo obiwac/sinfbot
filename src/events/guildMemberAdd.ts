@@ -1,10 +1,16 @@
-const { EmbedBuilder } = require('@discordjs/builders')
+import { EmbedBuilder, Events, GuildMember } from 'discord.js'
 
-module.exports = {
-  name: 'guildMemberAdd', // Triggered when someone joins the server
+import Client from '../client'
+
+export default {
+  name: Events.GuildMemberAdd,
   once: false,
+  async execute(client: Client, member: GuildMember): Promise<void> {
+    if (member.user.username.toLowerCase().includes('reixam')) {
+      await member.ban({ reason: 'Reixam' })
+      return
+    }
 
-  async execute(_, member) {
     const welcomeEmbed = new EmbedBuilder()
       .setTitle('Bienvenue sur le Discord SINF')
       .setDescription(
@@ -13,10 +19,6 @@ module.exports = {
       .setColor(0x5865f2)
       .setThumbnail(member.guild.iconURL())
 
-    if (member.user.username.toLowerCase().includes('reixam')) {
-      return member.ban({ reason: 'Reixam' })
-    }
-
-    return member.send({ embeds: [welcomeEmbed] })
+    await member.send({ embeds: [welcomeEmbed] }).catch(() => {})
   },
 }

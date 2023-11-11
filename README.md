@@ -6,9 +6,10 @@ Clone the project and install the dependencies by running
 
 ```console
 npm install
+tsc
 ```
 
-Create the `src/.env` file, paste in the content of `src/.env.example` by modifying the variables appropriately.
+Create the `.env` file into the new `dist` folder, paste in the content of `src/.env.example` by modifying the variables appropriately.
 To create a bot and get the token, go to https://discord.com/developers/applications. **Do not forget** to enable all priviledged intents on the application page.
 
 To run the bot, execute
@@ -29,6 +30,6 @@ The commands will be registered automatically.
 - [x] A welcoming DM to newcomers
 - [x] A poll system
 - [x] Some funny commands (`!poop`, `!méchant`, `!criminel`,...)
-- [ ] A dynamic !help listing
+- [x] A dynamic !help listing
 - [ ] A hidden rick roll in the project (Holger is in charge)
 - [x] A `/version` command that return the commit hash o

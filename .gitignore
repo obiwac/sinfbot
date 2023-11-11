@@ -3,6 +3,7 @@ node_modules
 log
 *.log
 channels.json*
+dist
 
 # editor-related stuff
 .sw[op]
