@@ -1,7 +1,7 @@
-import { ChannelType, Events, Interaction } from 'discord.js';
+import { ChannelType, Events, Interaction } from 'discord.js'
 
-import Client from '../client';
-import { Button, Command } from '../type';
+import Client from '../client'
+import { Button, Command } from '../type'
 
 export default {
   name: Events.InteractionCreate,
@@ -14,36 +14,38 @@ export default {
     ) {
       await interaction.user.send({
         content: 'DM commands are not allowed!',
-      });
-      return;
+      })
+      return
     }
 
     if (interaction.isCommand()) {
-      const cmd: Command | undefined = client.getCommand(interaction.commandName);
+      const cmd: Command | undefined = client.getCommand(
+        interaction.commandName,
+      )
       if (!cmd) {
         interaction.reply({
           content: 'Unknown command!',
           ephemeral: true,
-        });
-        return;
+        })
+        return
       }
 
-      await cmd.execute(client, interaction);
-      return;
+      await cmd.execute(client, interaction)
+      return
     }
 
     if (interaction.isButton()) {
-      const btnName = interaction.customId.split('-')[0];
-      const btn: Button | undefined = client.getButton(btnName);
+      const btnName = interaction.customId.split('-')[0]
+      const btn: Button | undefined = client.getButton(btnName)
       if (!btn) {
         interaction.reply({
           content: 'Unknown button!',
           ephemeral: true,
-        });
-        return;
+        })
+        return
       }
 
-      await btn.execute(client, interaction);
+      await btn.execute(client, interaction)
     }
   },
-};
+}
