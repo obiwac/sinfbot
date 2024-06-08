@@ -2,10 +2,8 @@
 node_modules
 log
 *.log
-channels.json*
 
 # editor-related stuff
 .sw[op]
 .idea
-
-meme_contest/*.json
+.vscode
