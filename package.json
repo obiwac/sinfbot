@@ -1,6 +1,7 @@
 {
 	"name": "sinfbot",
 	"homepage": "https://github.com/obiwac/sinfbot",
+	"version": "2.0.0",
 	"module": "main.ts",
 	"type": "module",
 	"scripts": {
