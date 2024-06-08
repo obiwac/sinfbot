@@ -5,11 +5,14 @@ import type {
 	ClientEvents,
 	Collection,
 	ModalSubmitInteraction,
-	SlashCommandBuilder
+	SharedSlashCommand,
+	SlashCommandAttachmentOption,
+	SlashCommandBuilder,
+	SlashCommandOptionsOnlyBuilder
 } from "discord.js";
 
 export interface Command {
-	data: SlashCommandBuilder;
+	data: SharedSlashCommand;
 	execute: (interaction: ChatInputCommandInteraction) => void;
 	cooldown?: number;
 	autocomplete?: (interaction: AutocompleteInteraction) => void;
