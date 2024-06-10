@@ -6,20 +6,20 @@ import type { Command } from "../types";
 
 const command: Command = {
 	data: new SlashCommandBuilder()
-		.setName("obofact")
-		.setDescription(
-			"Obo did amazing things. Shares a fact that our savior did"
-		),
+		.setName("bible")
+		.setDescription("Return a passage from the bible"),
 
 	execute: async interaction => {
 		try {
 			const { body } = await request(
-				"https://api.chucknorris.io/jokes/random"
+				`https://bible-api.com/?random=verse`
 			);
-			const fact: any = await body.json();
-			const sent = fact.value.replaceAll("Chuck Norris", "Obo");
+			const verse: any = await body.json();
+			let sent = verse.text
+				.replaceAll("God", "Obo")
+				.replaceAll("Jesus", "JMH");
 
-			return interaction.reply(sent);
+			interaction.reply(sent);
 		} catch (error) {
 			console.error(
 				`${chalk.redBright.bold("ERROR")} ${chalk.gray(
@@ -29,7 +29,7 @@ const command: Command = {
 
 			interaction.reply({
 				content:
-					":x: We couldn't fetch any Obo fact (the API is probably down or someone messed up)",
+					":x: We couldn't fetch any verse (the API is probably down or someone messed up)",
 				ephemeral: true
 			});
 

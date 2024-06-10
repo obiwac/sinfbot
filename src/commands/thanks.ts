@@ -1,6 +1,6 @@
-import { SlashCommandBuilder } from "discord.js";
+import { SlashCommandBuilder, EmbedBuilder } from "discord.js";
+
 import type { Command } from "../types";
-import { EmbedBuilder } from "@discordjs/builders";
 
 const command: Command = {
 	data: new SlashCommandBuilder()
