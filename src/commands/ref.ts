@@ -1,26 +1,25 @@
-import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
+import { SlashCommandBuilder } from "discord.js";
 
 import type { Command } from "../types";
-import localisations from "../data/map_data.json";
+import refs from "../data/refs.json";
 
 const command: Command = {
 	data: new SlashCommandBuilder()
-		.setName("where")
+		.setName("ref")
 		.setDescription(
-			"Get the location of any building/auditorium in Louvain-la-Neuve"
+			"Send a wholesome video or a meme of your favorite teacher"
 		)
 		.addStringOption(option =>
 			option
 				.setName("search")
-				.setDescription("The building/auditorium you want to locate")
+				.setDescription("The video/meme you want to send")
 				.setAutocomplete(true)
 				.setRequired(true)
 		),
 
 	execute: interaction => {
-		const url = "https://maps.google.com/?q=";
 		const choice = interaction.options.getString("search", true);
-		const data = localisations.find(
+		const data = refs.find(
 			item => item.name.toLowerCase() === choice.toLowerCase()
 		);
 
@@ -31,21 +30,12 @@ const command: Command = {
 				ephemeral: true
 			});
 
-		const embed = new EmbedBuilder()
-			.setTitle(data.name)
-			.setDescription(
-				`[Click here](${url}${data.latitude},${data.longitude}) to see the location on Google Maps`
-			);
-
-		if (data.description)
-			embed.addFields({ name: "Description", value: data.description });
-
-		interaction.reply({ embeds: [embed] });
+		interaction.reply(data.text);
 	},
 
 	autocomplete: async interaction => {
 		const focusedValue = interaction.options.getFocused();
-		const choices = localisations.map(item => item.name);
+		const choices = refs.map(item => item.name);
 		const filtered = choices
 			.filter(choice =>
 				choice.toLowerCase().includes(focusedValue.toLowerCase())

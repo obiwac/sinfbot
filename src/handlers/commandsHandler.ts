@@ -2,13 +2,19 @@ import fs from "node:fs";
 import path from "node:path";
 
 import chalk from "chalk";
-import { SlashCommandBuilder, REST, type Client, Routes } from "discord.js";
+import {
+	SlashCommandBuilder,
+	REST,
+	type Client,
+	Routes,
+	SharedSlashCommand
+} from "discord.js";
 
 import type { Command } from "../types";
 
 export default async (client: Client) => {
 	const rest = new REST().setToken(process.env.DISCORD_TOKEN!);
-	const commands: SlashCommandBuilder[] = [];
+	const commands: SharedSlashCommand[] = [];
 	let commandsDir = path.join(__dirname, "../commands");
 
 	try {

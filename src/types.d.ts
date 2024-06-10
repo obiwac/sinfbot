@@ -5,10 +5,7 @@ import type {
 	ClientEvents,
 	Collection,
 	ModalSubmitInteraction,
-	SharedSlashCommand,
-	SlashCommandAttachmentOption,
-	SlashCommandBuilder,
-	SlashCommandOptionsOnlyBuilder
+	SharedSlashCommand
 } from "discord.js";
 
 export interface Command {

@@ -1,0 +1,194 @@
+[
+	{
+		"name": "Réaumur",
+		"description": "Bâtiment informatique",
+		"latitude": 50.6685431,
+		"longitude": 4.6220938
+	},
+	{
+		"name": "Salle Intel",
+		"description": "",
+		"latitude": 50.668719,
+		"longitude": 4.6220187
+	},
+	{
+		"name": "Salle Bill Joy",
+		"description": "",
+		"latitude": 50.6685626,
+		"longitude": 4.6218148
+	},
+	{
+		"name": "Salle Siemens",
+		"description": "",
+		"latitude": 50.6685788,
+		"longitude": 4.6220174
+	},
+	{
+		"name": "Candix",
+		"description": "",
+		"latitude": 50.6681805,
+		"longitude": 4.6230525
+	},
+	{
+		"name": "IAO",
+		"description": "",
+		"latitude": 50.6680513,
+		"longitude": 4.6230659
+	},
+	{
+		"name": "DAO",
+		"description": "",
+		"latitude": 50.6681397,
+		"longitude": 4.6228298
+	},
+	{
+		"name": "Pasteur",
+		"description": "2e étage",
+		"latitude": 50.6695432,
+		"longitude": 4.6192741
+	},
+	{
+		"name": "Darwin",
+		"description": "",
+		"latitude": 50.6665768,
+		"longitude": 4.619591
+	},
+	{
+		"name": "Fischer",
+		"description": "",
+		"latitude": 50.6662463,
+		"longitude": 4.6202591
+	},
+	{
+		"name": "Ulysse",
+		"description": "",
+		"latitude": 50.6660763,
+		"longitude": 4.6205407
+	},
+	{
+		"name": "Cérès",
+		"description": "",
+		"latitude": 50.6659947,
+		"longitude": 4.6205515
+	},
+	{
+		"name": "Atlas",
+		"description": "",
+		"latitude": 50.6660474,
+		"longitude": 4.6206292
+	},
+	{
+		"name": "Parnas",
+		"description": "",
+		"latitude": 50.6686496,
+		"longitude": 4.6217782
+	},
+	{
+		"name": "Croix du Sud (SUD)",
+		"description": "",
+		"latitude": 50.667053,
+		"longitude": 4.6202998
+	},
+	{
+		"name": "Batiment science (A)",
+		"description": "",
+		"latitude": 50.6684929,
+		"longitude": 4.6197085
+	},
+	{
+		"name": "Cyclotron (CYCL)",
+		"description": "",
+		"latitude": 50.666001,
+		"longitude": 4.6235326
+	},
+	{
+		"name": "Pierre Curie (PCUR)",
+		"description": "",
+		"latitude": 50.6681704,
+		"longitude": 4.620548
+	},
+	{
+		"name": "Sainte Barbe (BARB)",
+		"description": "",
+		"latitude": 50.6682566,
+		"longitude": 4.6214282
+	},
+	{
+		"name": "Institut des langues vivantes (ILV)",
+		"description": "",
+		"latitude": 50.669048,
+		"longitude": 4.6147855
+	},
+	{
+		"name": "Doyen",
+		"description": "",
+		"latitude": 50.6683223,
+		"longitude": 4.6125005
+	},
+	{
+		"name": "Leclerq (LECL)",
+		"description": "",
+		"latitude": 50.6679963,
+		"longitude": 4.6118893
+	},
+	{
+		"name": "More",
+		"description": "",
+		"latitude": 50.6679641,
+		"longitude": 4.6114202
+	},
+	{
+		"name": "Montesquieu (MONT)",
+		"description": "",
+		"latitude": 50.6683983,
+		"longitude": 4.6115921
+	},
+	{
+		"name": "Agora (AGOR)",
+		"description": "",
+		"latitude": 50.6689649,
+		"longitude": 4.6124017
+	},
+	{
+		"name": "Studio (STUD)",
+		"description": "En haut de l'escalier en colimaçon",
+		"latitude": 50.669104,
+		"longitude": 4.6127086
+	},
+	{
+		"name": "Socrate (SOCR)",
+		"description": "",
+		"latitude": 50.6700829,
+		"longitude": 4.610893
+	},
+	{
+		"name": "Coubertin (COUB)",
+		"description": "",
+		"latitude": 50.6706257,
+		"longitude": 4.6068095
+	},
+	{
+		"name": "Bâtiment Stats",
+		"description": "",
+		"latitude": 50.6689156,
+		"longitude": 4.6156448
+	},
+	{
+		"name": "SICI",
+		"description": "Service d'impression du Cercle Industriel (pour les livres)",
+		"latitude": 50.6681172,
+		"longitude": 4.6207392
+	},
+	{
+		"name": "Louvain-Li-Nux",
+		"description": "",
+		"latitude": 50.6648307,
+		"longitude": 4.6121431
+	},
+	{
+		"name": "Cercle Industriel (CI)",
+		"description": "",
+		"latitude": 50.6680754,
+		"longitude": 4.6175355
+	}
+]
