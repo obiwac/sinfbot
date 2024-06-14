@@ -1,0 +1,5 @@
+services:
+    sinfbot:
+        build: .
+        env_file:
+            - .env
