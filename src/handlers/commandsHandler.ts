@@ -34,6 +34,17 @@ export default async (client: Client) => {
 			let { default: command }: { default: Command } = await import(
 				`file://${commandsDir}/${file}`
 			);
+
+			if (!command) {
+				console.log(
+					`${chalk.yellow("WARN")} ${chalk.gray(
+						">"
+					)} Skipping command file ${file} (import returned "undefined", is the command correctly exported?)`
+				);
+
+				continue;
+			}
+
 			commands.push(command.data);
 			client.commands.set(command.data.name, command);
 		}

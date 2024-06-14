@@ -24,7 +24,7 @@ const command: Command = {
 			console.error(
 				`${chalk.redBright.bold("ERROR")} ${chalk.gray(
 					">"
-				)} (obofact) Error while fetching API: ${error}`
+				)} (bible) Error while fetching API: ${error}`
 			);
 
 			interaction.reply({
