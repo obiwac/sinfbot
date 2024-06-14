@@ -28,9 +28,9 @@ export default (client: Client) => {
 			: client.on(event.name, (...args) => event.execute(...args));
 
 		console.log(
-			`${chalk.cyan("INFO")} ${chalk.gray(">")} Loaded event "${
+			`${chalk.cyan("INFO")} ${chalk.gray(">")} Loaded event ${
 				event.name
-			}"`
+			}`
 		);
 	});
 };
