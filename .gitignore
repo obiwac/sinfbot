@@ -7,3 +7,6 @@ log
 .sw[op]
 .idea
 .vscode
+
+# db files
+*.sqlite

@@ -1,4 +1,5 @@
 import { PermissionFlagsBits, SlashCommandBuilder } from "discord.js";
+
 import type { Command } from "../types";
 
 const command: Command = {
