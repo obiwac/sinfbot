@@ -2,13 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 import chalk from "chalk";
-import {
-	SlashCommandBuilder,
-	REST,
-	type Client,
-	Routes,
-	SharedSlashCommand
-} from "discord.js";
+import { REST, type Client, Routes, SharedSlashCommand } from "discord.js";
 
 import type { Command } from "../types";
 
