@@ -23,6 +23,16 @@ export default (client: Client) => {
 		const { default: event }: { default: Event } = await import(
 			`file://${eventsDir}/${file}`
 		);
+		if (!event) {
+			console.log(
+				`${chalk.yellow("WARN")} ${chalk.gray(
+					">"
+				)} Skipping event file ${file} (import returned "undefined", is the event correctly exported?)`
+			);
+
+			return;
+		}
+
 		event.once
 			? client.once(event.name, (...args) => event.execute(...args))
 			: client.on(event.name, (...args) => event.execute(...args));

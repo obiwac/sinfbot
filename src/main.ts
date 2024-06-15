@@ -2,12 +2,19 @@ import fs from "node:fs";
 import path from "node:path";
 
 import chalk from "chalk";
-import { Client, Collection, GatewayIntentBits } from "discord.js";
+import { Client, Collection, GatewayIntentBits, Partials } from "discord.js";
 import "dotenv/config";
 
 import { type Command } from "./types";
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+const client = new Client({
+	intents: [
+		GatewayIntentBits.Guilds,
+		GatewayIntentBits.GuildMessages,
+		GatewayIntentBits.GuildMessageReactions
+	],
+	partials: [Partials.Message, Partials.Channel, Partials.Reaction]
+});
 const handlersDir = path.join(__dirname, "./handlers");
 
 client.commands = new Collection<string, Command>();
@@ -26,6 +33,16 @@ client.cooldowns = new Collection<string, number>();
 		}
 
 		const handlerLoader = await import(`file://${handlersDir}/${handler}`);
+		if (!handlerLoader.default) {
+			console.log(
+				`${chalk.yellow("WARN")} ${chalk.gray(
+					">"
+				)} Skipping handler file ${handler} (import returned "undefined", is the handler correctly exported?)`
+			);
+
+			continue;
+		}
+
 		await handlerLoader.default(client);
 	}
 
