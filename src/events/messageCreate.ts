@@ -17,18 +17,27 @@ const event: Event = {
 			});
 
 			await feur.increment("amount");
-
 			const timeout_time = Math.pow(2, feur.amount) * 1000;
-			await message.member?.timeout(
-				timeout_time,
-				`Said feur ${feur.amount} times`
-			);
 
-			message.reply(
-				`You said feur ${feur.amount} times, you'll be timed out for ${
-					timeout_time / 1000
-				} seconds!`
-			);
+			try {
+				await message.member?.timeout(
+					timeout_time,
+					`Said feur ${feur.amount} times`
+				);
+
+				message.reply(
+					`You said feur ${
+						feur.amount
+					} times, you'll be timed out for ${
+						timeout_time / 1000
+					} seconds!`
+				);
+			} catch (_) {
+				// Bot doesn't have the permission
+				message.reply(
+					`You said feur ${feur.amount} times. That's amazing!`
+				);
+			}
 		}
 	}
 };
