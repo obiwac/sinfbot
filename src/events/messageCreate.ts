@@ -12,8 +12,7 @@ const event: Event = {
 
 		if (message.content.match(feurRegex)) {
 			const [feur] = await Feur.findOrCreate({
-				where: { userId: message.author.id },
-				useMaster: true
+				where: { userId: message.author.id }
 			});
 
 			await feur.increment("amount");

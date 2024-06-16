@@ -13,13 +13,14 @@ const event: Event = {
 		// TODO: Find a way to cache old messages
 		const message: Message = reaction.message;
 
-		if (excludedChannels.includes(message.channel.id)) return;
+		if (excludedChannels.includes(message.channel.id) || !message.pinned)
+			return;
 
 		const hasPinRole = message.guild?.members.cache
 			.get(user.id)
 			?.roles.cache.some(role => role.id === pinRoleId);
 
-		if (hasPinRole && message.pinned) {
+		if (hasPinRole) {
 			await message.unpin();
 		}
 	}

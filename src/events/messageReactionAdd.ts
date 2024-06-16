@@ -16,7 +16,8 @@ const event: Event = {
 	execute: async (reaction, user) => {
 		const message: Message = reaction.message;
 
-		if (excludedChannels.includes(message.channel.id)) return;
+		if (excludedChannels.includes(message.channel.id) || message.pinned)
+			return;
 
 		if (message.partial) {
 			try {
@@ -51,11 +52,7 @@ const event: Event = {
 			.get(user.id)
 			?.roles.cache.some(role => role.id === pinRoleId);
 
-		if (
-			votes &&
-			(votes.count >= pinThreshold || hasPinRole) &&
-			!message.pinned
-		)
+		if (votes && (votes.count >= pinThreshold || hasPinRole))
 			await message.pin();
 	}
 };
