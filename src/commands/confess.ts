@@ -18,18 +18,44 @@ import {
 // TODO: Do some clean up here
 
 import type { Command } from "../types";
+import Confess from "../db/models/confess";
 
 const vote_minutes = Number(process.env.CONFESSION_VOTE_MINUTES);
 
 const command: Command = {
 	data: new SlashCommandBuilder()
 		.setName("confess")
-		.setDescription("Confess a sin to the entire world"),
+		.setDescription("Confess a sin to the entire world")
+		.addSubcommand(subcommand =>
+			subcommand.setName("new").setDescription("Create a new confess")
+		)
+		.addSubcommand(subcommand =>
+			subcommand
+				.setName("continue")
+				.setDescription("Continue/reply to your last confess")
+		),
 
 	execute: async interaction => {
 		const modal = new ModalBuilder()
-			.setCustomId("confess")
+			.setCustomId("confess_new")
 			.setTitle("Confession");
+
+		if (interaction.options.getSubcommand() === "continue") {
+			const confess = await Confess.findOne({
+				where: { userIdHash: Bun.hash(interaction.user.id) }
+			});
+
+			if (!confess)
+				return interaction.reply({
+					content:
+						":x: You don't have any previous confession, use `/confess new` to create a new one",
+					ephemeral: true
+				});
+
+			modal
+				.setCustomId("confess_continue")
+				.setTitle("Continue confession");
+		}
 
 		const confessText = new TextInputBuilder()
 			.setCustomId("confessText")
@@ -51,6 +77,10 @@ const command: Command = {
 	},
 
 	modal: async interaction => {
+		const confess = await Confess.findOne({
+			where: { userIdHash: Bun.hash(interaction.user.id) }
+		});
+
 		const adminChannel = (await interaction.client.channels.fetch(
 			process.env.ADMIN_CHANNEL_ID!
 		)) as TextChannel;
@@ -63,6 +93,18 @@ const command: Command = {
 		const embed = new EmbedBuilder()
 			.setTitle("Confession")
 			.setDescription(confessText);
+
+		if (interaction.customId === "confess_continue") {
+			const message = await confessionChannel.messages.fetch(
+				confess?.messageId!
+			);
+
+			embed
+				.setTitle("Confession")
+				.setDescription(
+					`> Follow-up of [this confession](${message.url})\n\n${confessText}`
+				);
+		}
 
 		const approveButton = new ButtonBuilder()
 			.setCustomId("approve")
@@ -105,9 +147,21 @@ const command: Command = {
 
 			switch (i.customId) {
 				case "approve":
-					let sentConfession = await confessionChannel.send({
-						embeds: [embed]
-					}); // We await so that the color isn't changed before the confession is sent
+					let sentConfession;
+
+					if (interaction.customId === "confess_continue") {
+						const message = await confessionChannel.messages.fetch(
+							confess?.messageId!
+						);
+
+						sentConfession = await message.reply({
+							embeds: [embed.setDescription(confessText)]
+						});
+					} else {
+						sentConfession = await confessionChannel.send({
+							embeds: [embed]
+						}); // We await so that the color isn't changed before the confession is sent
+					}
 
 					vote.edit({
 						embeds: [
@@ -118,13 +172,27 @@ const command: Command = {
 						components: []
 					});
 
+					const existingConfess = await Confess.findOne({
+						where: { userIdHash: Bun.hash(interaction.user.id) }
+					});
+
+					if (existingConfess) {
+						existingConfess.messageId = sentConfession.id;
+						await existingConfess.save();
+					} else {
+						await Confess.create({
+							userIdHash: Bun.hash(interaction.user.id),
+							messageId: sentConfession.id
+						});
+					}
+
 					interaction.user
 						.send({
 							embeds: [
 								new EmbedBuilder()
 									.setTitle("Confession approved")
 									.setDescription(
-										`Your confession "*${confessText}*" was approved. It is now available publicly.\n[Click here](${sentConfession.url}) to view it`
+										`Your confession\n\`\`\`${confessText}\`\`\`was approved. It is now available publicly.\n\n> [Click here](${sentConfession.url}) to view it`
 									)
 									.setColor(0x00ff00)
 							]
@@ -149,7 +217,7 @@ const command: Command = {
 								new EmbedBuilder()
 									.setTitle("Confession rejected")
 									.setDescription(
-										`Your confession "*${confessText}*" has been rejected. It will not be shared publicly.`
+										`Your confession\n\`\`\`${confessText}\`\`\`has been rejected. It will not be shared publicly.`
 									)
 									.setColor(0xff0000)
 							]
@@ -180,7 +248,7 @@ const command: Command = {
 								new EmbedBuilder()
 									.setTitle("WARNING")
 									.setDescription(
-										`Your confession "*${confessText}*" has been rejected and you have been issued a warning. Please note that confessions are **NOT** intended for this purpose. This includes (but not limited to): asking questions about courses (refer to the channel in question), sexual/violent/discriminating content, or stuff that crosses the line of being a bit too edgy. You'll be able to post a new confession in 1h. Please do help keep this a safe space :)`
+										`Your confession\n\`\`\`${confessText}\`\`\`has been rejected and you have been issued a warning. Please note that confessions are **NOT** intended for this purpose. This includes (but not limited to): asking questions about courses (refer to the channel in question), sexual/violent/discriminating content, or stuff that crosses the line of being a bit too edgy. You'll be able to post a new confession in 1h. Please do help keep this a safe space :)`
 									)
 									.setColor(0xffa500)
 							]
@@ -205,7 +273,7 @@ const command: Command = {
 							new EmbedBuilder()
 								.setTitle("Confession rejected")
 								.setDescription(
-									`Your confession "*${confessText}*" received no votes, it was therefore rejected. You can however resubmit it with the command /confess`
+									`Your confession\n\`\`\`${confessText}\`\`\`received no votes, it was therefore rejected. You can however resubmit it with the command /confess`
 								)
 								.setColor(0x808080)
 						]
@@ -214,7 +282,7 @@ const command: Command = {
 			}
 		});
 
-		return interaction.reply({
+		interaction.reply({
 			embeds: [
 				new EmbedBuilder()
 					.setTitle("Confession sent")

@@ -63,7 +63,7 @@ const event: Event = {
 			}
 		} else if (interaction.isModalSubmit()) {
 			const command = interaction.client.commands.get(
-				interaction.customId
+				interaction.customId.split("_")[0]
 			);
 
 			if (!command || !command.modal) return;

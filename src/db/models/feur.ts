@@ -1,4 +1,5 @@
 import { DataTypes, Model } from "sequelize";
+
 import db from "../main";
 
 class Feur extends Model {
@@ -10,7 +11,9 @@ Feur.init(
 	{
 		userId: {
 			type: DataTypes.INTEGER,
-			unique: true
+			unique: true,
+			primaryKey: true,
+			allowNull: false
 		},
 		amount: {
 			type: DataTypes.INTEGER,
@@ -19,8 +22,8 @@ Feur.init(
 	},
 	{
 		sequelize: db,
-		modelName: "Feur",
-		tableName: "feurs"
+		tableName: "feurs",
+		timestamps: false
 	}
 );
 
