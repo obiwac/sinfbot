@@ -69,13 +69,25 @@ const event: Event = {
 			const contest = await Contest.findOne({ where: { channelId } });
 			if (!contest) return;
 
+			if (message.createdTimestamp < contest.startTime.getTime()) return;
+
+			const existingVote = await ContestVote.findOne({
+				where: { messageId: message.id, userId: user.id }
+			});
+
+			console.log(existingVote);
+			console.log(message.id);
+			console.log(user.id);
+
+			if (existingVote) return;
+
 			let contestMessage = await ContestMessage.findOne({
-				where: { messageId: message.id, contestId: contest.id }
+				where: { messageId: message.id, contestName: contest.name }
 			});
 
 			if (!contestMessage) {
 				contestMessage = await ContestMessage.create({
-					contestId: contest.id,
+					contestName: contest.name,
 					messageId: message.id,
 					reactionCount: 0
 				});
@@ -85,7 +97,7 @@ const event: Event = {
 			await contestMessage.save();
 
 			await ContestVote.create({
-				messageId: contestMessage.id,
+				messageId: contestMessage.messageId,
 				userId: user.id
 			});
 		}

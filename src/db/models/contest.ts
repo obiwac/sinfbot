@@ -2,38 +2,37 @@ import { DataTypes, Model } from "sequelize";
 import db from "../main";
 
 export class Contest extends Model {
-	declare id: number;
 	declare name: string;
 	declare channelId: string;
+	declare startTime: Date;
 	declare endTime: Date;
 }
 
 export class ContestMessage extends Model {
-	declare id: number;
-	declare contestId: number;
+	declare contestName: string;
 	declare messageId: string;
 	declare reactionCount: number;
 }
 
 export class ContestVote extends Model {
-	declare id: number;
 	declare messageId: string;
 	declare userId: string;
 }
 
 Contest.init(
 	{
-		id: {
-			type: DataTypes.INTEGER,
-			autoIncrement: true,
-			primaryKey: true
-		},
 		name: {
 			type: DataTypes.STRING,
+			unique: true,
+			primaryKey: true,
 			allowNull: false
 		},
 		channelId: {
 			type: DataTypes.STRING,
+			allowNull: false
+		},
+		startTime: {
+			type: DataTypes.DATE,
 			allowNull: false
 		},
 		endTime: {
@@ -43,22 +42,20 @@ Contest.init(
 	},
 	{
 		sequelize: db,
-		tableName: "contests"
+		tableName: "contests",
+		timestamps: false
 	}
 );
 
 ContestMessage.init(
 	{
-		id: {
-			type: DataTypes.INTEGER,
-			autoIncrement: true,
-			primaryKey: true
-		},
-		contestId: {
-			type: DataTypes.INTEGER,
+		messageId: {
+			type: DataTypes.STRING,
+			unique: true,
+			primaryKey: true,
 			allowNull: false
 		},
-		messageId: {
+		contestName: {
 			type: DataTypes.STRING,
 			allowNull: false
 		},
@@ -69,19 +66,17 @@ ContestMessage.init(
 	},
 	{
 		sequelize: db,
-		tableName: "contest_messages"
+		tableName: "contest_messages",
+		timestamps: false
 	}
 );
 
 ContestVote.init(
 	{
-		id: {
-			type: DataTypes.INTEGER,
-			autoIncrement: true,
-			primaryKey: true
-		},
 		messageId: {
 			type: DataTypes.STRING,
+			unique: true,
+			primaryKey: true,
 			allowNull: false
 		},
 		userId: {
@@ -91,29 +86,27 @@ ContestVote.init(
 	},
 	{
 		sequelize: db,
-		tableName: "contest_votes"
+		tableName: "contest_votes",
+		timestamps: false
 	}
 );
 
 // Create link between Contest and ContestMessage
 Contest.hasMany(ContestMessage, {
-	sourceKey: "id",
-	foreignKey: "contestId",
-	as: "messages"
+	sourceKey: "name",
+	foreignKey: "contestName"
 });
 
 ContestMessage.belongsTo(Contest, {
-	foreignKey: "contestId",
-	as: "contest"
+	foreignKey: "contestName"
 });
 
+// Create link between ContestMessage and ContestVote
 ContestMessage.hasMany(ContestVote, {
-	sourceKey: "id",
-	foreignKey: "messageId",
-	as: "votes"
+	sourceKey: "messageId",
+	foreignKey: "messageId"
 });
 
 ContestVote.belongsTo(ContestMessage, {
-	foreignKey: "messageId",
-	as: "message"
+	foreignKey: "messageId"
 });

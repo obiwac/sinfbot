@@ -9,6 +9,8 @@ import {
 import { Contest, ContestMessage } from "../db/models/contest";
 import type { Command } from "../types";
 
+const voteEmoji = process.env.VOTE_EMOJI!;
+
 const command: Command = {
 	data: new SlashCommandBuilder()
 		.setName("contest")
@@ -42,6 +44,11 @@ const command: Command = {
 						.setDescription("When the contest should end")
 						.setRequired(true)
 				)
+		)
+		.addSubcommand(subcommand =>
+			subcommand
+				.setName("list")
+				.setDescription("List all ongoing contests")
 		)
 		.addSubcommand(subcommand =>
 			subcommand
@@ -79,9 +86,20 @@ const command: Command = {
 					ephemeral: true
 				});
 
+			const existingContest = await Contest.findOne({
+				where: { name }
+			});
+			if (existingContest) {
+				return interaction.reply({
+					content: ":x: Contest with the same name already exists",
+					ephemeral: true
+				});
+			}
+
 			Contest.create({
 				name,
 				channelId: channel.id,
+				startTime: new Date(),
 				endTime: endTimeDate
 			});
 
@@ -93,7 +111,7 @@ const command: Command = {
 			const embed = new EmbedBuilder()
 				.setTitle("Contest")
 				.setDescription(
-					`Contest \`${name}\` has started in this channel!`
+					`Contest \`${name}\` has started in this channel! Add the reaction ${voteEmoji} to vote for a message.`
 				)
 				.addFields(
 					{
@@ -109,6 +127,29 @@ const command: Command = {
 				);
 
 			(channel as TextChannel).send({ embeds: [embed] });
+		} else if (interaction.options.getSubcommand() === "list") {
+			const contests = await Contest.findAll();
+
+			if (contests.length === 0)
+				return interaction.reply({
+					content: ":x: No ongoing contests",
+					ephemeral: true
+				});
+
+			const embed = new EmbedBuilder()
+				.setTitle("Ongoing Contests")
+				.addFields(
+					contests.map(contest => ({
+						name: contest.name,
+						value: `<#${
+							contest.channelId
+						}>, ends on <t:${Math.floor(
+							contest.endTime.getTime() / 1000
+						)}:f>`
+					}))
+				);
+
+			interaction.reply({ embeds: [embed], ephemeral: true });
 		} else {
 			const name = interaction.options.getString("name", true);
 			const contest = await Contest.findOne({
@@ -122,7 +163,7 @@ const command: Command = {
 				});
 
 			const winner = await ContestMessage.findOne({
-				where: { contestId: contest.id },
+				where: { contestName: contest.name },
 				order: [["reactionCount", "DESC"]]
 			});
 
@@ -151,6 +192,8 @@ const command: Command = {
 				.setDescription(
 					`Contest \`${name}\` has ended! The winner is <@${message.author.id}> with ${winner.reactionCount} vote(s) (Check the message [here](${message.url}))`
 				);
+
+			Contest.destroy({ where: { name } });
 
 			interaction.reply({
 				content: `:white_check_mark: Contest \`${name}\` ended`,
