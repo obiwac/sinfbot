@@ -1,73 +1,73 @@
 [
 	{
 		"name": "Réaumur",
-		"description": "Bâtiment informatique",
+		"description": "Bâtiment du pôle informatique",
 		"latitude": 50.6685431,
 		"longitude": 4.6220938
 	},
 	{
 		"name": "Salle Intel",
-		"description": "",
+		"description": "Dans le bâtiment Réaumur, rez-de-chausée, carte d'accès nécessaire",
 		"latitude": 50.668719,
 		"longitude": 4.6220187
 	},
 	{
 		"name": "Salle Bill Joy",
-		"description": "",
+		"description": "Dans le bâtiment Réaumur, rez-de-chausée",
 		"latitude": 50.6685626,
 		"longitude": 4.6218148
 	},
 	{
 		"name": "Salle Siemens",
-		"description": "",
+		"description": "Dans le bâtiment Réaumur, rez-de-chausée",
 		"latitude": 50.6685788,
 		"longitude": 4.6220174
 	},
 	{
 		"name": "Candix",
-		"description": "",
+		"description": "Entrée par la place Sainte-Barbe, à droite dans la cour intérieure et sur la gauche dans le bâtiment",
 		"latitude": 50.6681805,
 		"longitude": 4.6230525
 	},
 	{
 		"name": "IAO",
-		"description": "",
+		"description": "Entrée par la place Sainte-Barbe, à droite dans la cour intérieure et directement en face dans le bâtiment",
 		"latitude": 50.6680513,
 		"longitude": 4.6230659
 	},
 	{
 		"name": "DAO",
-		"description": "",
+		"description": "Entrée par la place Sainte-Barbe, à droite dans la cour intérieure et dans un couloir sur la droite dans le bâtiment",
 		"latitude": 50.6681397,
 		"longitude": 4.6228298
 	},
 	{
 		"name": "Pasteur",
-		"description": "2e étage",
+		"description": "2e étage de la BST",
 		"latitude": 50.6695432,
 		"longitude": 4.6192741
 	},
 	{
 		"name": "Darwin",
-		"description": "",
+		"description": "Local B -102, dans le bâtiment de Serres",
 		"latitude": 50.6665768,
 		"longitude": 4.619591
 	},
 	{
 		"name": "Fischer",
-		"description": "",
+		"description": "Local B 023, dans le bâtiment de Serres",
 		"latitude": 50.6662463,
 		"longitude": 4.6202591
 	},
 	{
 		"name": "Ulysse",
-		"description": "",
+		"description": "Local B 027, dans le bâtiment de Serres",
 		"latitude": 50.6660763,
 		"longitude": 4.6205407
 	},
 	{
 		"name": "Cérès",
-		"description": "",
+		"description": "Local B 011, dans le bâtiment de Serres",
 		"latitude": 50.6659947,
 		"longitude": 4.6205515
 	},
@@ -79,7 +79,7 @@
 	},
 	{
 		"name": "Parnas",
-		"description": "",
+		"description": "Dans le bâtiment Réaumur",
 		"latitude": 50.6686496,
 		"longitude": 4.6217782
 	},
@@ -90,7 +90,7 @@
 		"longitude": 4.6202998
 	},
 	{
-		"name": "Batiment science (A)",
+		"name": "Bâtiment science (A)",
 		"description": "",
 		"latitude": 50.6684929,
 		"longitude": 4.6197085
@@ -121,7 +121,7 @@
 	},
 	{
 		"name": "Doyen",
-		"description": "",
+		"description": "Prof. Olivier Bonaventure",
 		"latitude": 50.6683223,
 		"longitude": 4.6125005
 	},
