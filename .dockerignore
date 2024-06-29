@@ -1,9 +1,9 @@
 node_modules
-Dockerfile*
+Dockerfile
 docker-compose*
 .dockerignore
 .git
 .gitignore
 README.md
 .vscode
-.env
+.env*
