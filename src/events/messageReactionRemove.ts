@@ -1,4 +1,3 @@
-import chalk from "chalk";
 import { Events, Message } from "discord.js";
 
 import type { Event } from "../types";
