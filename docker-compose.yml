@@ -1,6 +1,7 @@
 services:
     sinfbot:
         build: .
+        container_name: sinfbot
         env_file:
             - .env
         volumes:

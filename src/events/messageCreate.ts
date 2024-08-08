@@ -21,20 +21,20 @@ const event: Event = {
 			try {
 				await message.member?.timeout(
 					timeout_time,
-					`Said feur ${feur.amount} times`
+					`Said feur ${feur.amount} time(s)`
 				);
 
 				message.reply(
 					`You said feur ${
 						feur.amount
-					} times, you'll be timed out for ${
+					} time(s), you'll be timed out for ${
 						timeout_time / 1000
 					} seconds!`
 				);
 			} catch (_) {
 				// Bot doesn't have the permission
 				message.reply(
-					`You said feur ${feur.amount} times. That's amazing!`
+					`You said feur ${feur.amount} time(s). That's amazing!`
 				);
 			}
 		}

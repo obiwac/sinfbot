@@ -295,7 +295,7 @@ const command: Command = {
 		});
 	},
 
-	cooldown: 30
+	cooldown: 5
 };
 
 export default command;
