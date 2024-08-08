@@ -15,24 +15,18 @@ const event: Event = {
 				where: { userId: message.author.id }
 			});
 
-			const currAmount = feur.amount;
+			await feur.increment("amount");
 			const timeout_time = Math.pow(2, feur.amount) * 1000;
-			
-			// feur.amount += 1;
-			await Feur.update(
-				{amount: currAmount+1},
-				{ where: { userId: message.author.id } }
-			)			
 
 			try {
 				await message.member?.timeout(
 					timeout_time,
-					`Said feur ${currAmount} time(s)`
+					`Said feur ${feur.amount} time(s)`
 				);
 
 				message.reply(
 					`You said feur ${
-						currAmount
+						feur.amount
 					} time(s), you'll be timed out for ${
 						timeout_time / 1000
 					} seconds!`
