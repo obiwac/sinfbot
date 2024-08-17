@@ -1,4 +1,4 @@
-import { Events, Message } from "discord.js";
+import { Events, Message, PermissionFlagsBits } from "discord.js";
 
 import Feur from "../db/models/feur";
 import type { Event } from "../types";
@@ -12,17 +12,27 @@ const event: Event = {
 
 		if (message.content.match(feurRegex)) {
 			const [feur] = await Feur.findOrCreate({
-				where: { userId: message.author.id }
+				where: {
+					userId: message.author.id
+				}
 			});
 
+			// Max timeout time is 28 days for the API
 			const currAmount = feur.amount;
-			const timeout_time = Math.pow(2, feur.amount) * 1000;
-			
-			// feur.amount += 1;
+			const timeout_time = Math.min(
+				Math.pow(2, feur.amount) * 1000,
+				28 * 24 * 60 * 60 * 1000
+			);
+
 			await Feur.update(
-				{amount: currAmount+1},
+				{
+					amount: currAmount + 1,
+					isAdmin: message.member?.permissions.has(
+						PermissionFlagsBits.Administrator
+					)
+				},
 				{ where: { userId: message.author.id } }
-			)			
+			);
 
 			try {
 				await message.member?.timeout(
@@ -31,9 +41,7 @@ const event: Event = {
 				);
 
 				message.reply(
-					`You said feur ${
-						currAmount
-					} time(s), you'll be timed out for ${
+					`You said feur ${currAmount} time(s), you'll be timed out for ${
 						timeout_time / 1000
 					} seconds!`
 				);

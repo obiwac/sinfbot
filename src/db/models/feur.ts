@@ -3,14 +3,15 @@ import { DataTypes, Model } from "sequelize";
 import db from "../main";
 
 class Feur extends Model {
-    declare userId: number;
+    declare userId: string;
     declare amount: number;
+    declare isAdmin: boolean;
 }
 
 Feur.init(
     {
         userId: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             unique: true,
             primaryKey: true,
             allowNull: false
@@ -18,6 +19,10 @@ Feur.init(
         amount: {
             type: DataTypes.INTEGER,
             defaultValue: 1
+        },
+        isAdmin: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
         }
     },
     {
