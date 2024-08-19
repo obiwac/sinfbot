@@ -28,7 +28,7 @@ const event: Event = {
 				{
 					amount: currAmount + 1,
 					isAdmin: message.member?.permissions.has(
-						PermissionFlagsBits.Administrator
+						PermissionFlagsBits.KickMembers
 					)
 				},
 				{ where: { userId: message.author.id } }
