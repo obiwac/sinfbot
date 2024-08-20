@@ -10,10 +10,11 @@ You can then proceed using any of the two installation methods available below.
 
 ### Using Docker
 
-If you have Docker installed, you can simply use Docker Compose to automatically build and run a container with all dependencies already installed:
+If you have Docker installed, you can simply use the provided script to automatically build and run a container with all dependencies already installed using Docker Compose (make sure to have that installed as well):
 
 ```sh
-docker compose up
+chmod +x run.sh
+./run.sh
 ```
 
 ### The OG way

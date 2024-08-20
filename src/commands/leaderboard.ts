@@ -9,11 +9,14 @@ const command: Command = {
 		.setDescription("See who's the feur master"),
 	execute: async interaction => {
 		const feurs = await Feur.findAll({
+			where: {
+				isAdmin: false
+			},
 			order: [["amount", "DESC"]],
 			limit: 10
 		});
 
-		if (!feurs.length || feurs.every(feur => feur.isAdmin))
+		if (!feurs.length)
 			return interaction.reply({
 				content: ":x: No one has said feur yet!",
 				ephemeral: true
@@ -23,7 +26,6 @@ const command: Command = {
 			.setTitle("Feur Leaderboard")
 			.setDescription(
 				feurs
-					.filter(feur => !feur.isAdmin)
 					.map(
 						(feur, index) =>
 							`${

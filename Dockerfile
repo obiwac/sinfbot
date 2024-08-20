@@ -3,6 +3,14 @@
 FROM oven/bun:1 AS base
 WORKDIR /app
 
+ARG GIT_COMMIT
+ARG GIT_BRANCH
+ARG GIT_REMOTE
+
+ENV GIT_COMMIT=$GIT_COMMIT
+ENV GIT_BRANCH=$GIT_BRANCH
+ENV GIT_REMOTE=$GIT_REMOTE
+
 FROM base AS install
 RUN mkdir -p /temp/dev
 COPY package.json bun.lockb /temp/dev/
@@ -22,4 +30,4 @@ COPY --from=prerelease app/src src
 COPY --from=prerelease app/package.json .
 
 USER bun
-ENTRYPOINT [ "bun", "start" ]
+ENTRYPOINT ["bun", "start"]

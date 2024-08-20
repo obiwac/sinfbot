@@ -11,25 +11,27 @@ const command: Command = {
 		),
 
 	execute: interaction => {
-		const commit = Bun.spawnSync([
-			"git",
-			"rev-parse",
-			"HEAD"
-		]).stdout.toString();
+		const commit =
+			process.env.GIT_COMMIT ||
+			Bun.spawnSync(["git", "rev-parse", "HEAD"]).stdout.toString();
 
-		const branch = Bun.spawnSync([
-			"git",
-			"rev-parse",
-			"--abbrev-ref",
-			"HEAD"
-		]).stdout.toString();
+		const branch =
+			process.env.GIT_BRANCH ||
+			Bun.spawnSync([
+				"git",
+				"rev-parse",
+				"--abbrev-ref",
+				"HEAD"
+			]).stdout.toString();
 
-		const remote = Bun.spawnSync([
-			"git",
-			"config",
-			"--get",
-			"remote.origin.url"
-		]).stdout.toString();
+		const remote =
+			process.env.GIT_REMOTE ||
+			Bun.spawnSync([
+				"git",
+				"config",
+				"--get",
+				"remote.origin.url"
+			]).stdout.toString();
 
 		const system = Bun.spawnSync(["uname", "-r"]).stdout.toString();
 		const embed = new EmbedBuilder()
