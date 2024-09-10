@@ -20,21 +20,6 @@ const event: Event = {
 		const message = reaction.message;
 		const channelId = message.channel.id;
 
-		// Retrieve the full message if it's not cached
-		if (message.partial) {
-			try {
-				await message.fetch();
-			} catch (error) {
-				console.error(
-					`${chalk.redBright.bold("ERROR")} ${chalk.gray(
-						">"
-					)} (messageReactionAdd) Error while fetching full message: ${error}`
-				);
-
-				return;
-			}
-		}
-
 		// Retrieve the full reaction if it's not cached
 		if (reaction.partial) {
 			try {
@@ -44,6 +29,28 @@ const event: Event = {
 					`${chalk.redBright.bold("ERROR")} ${chalk.gray(
 						">"
 					)} (messageReactionAdd) Error while fetching full reaction: ${error}`
+				);
+
+				return;
+			}
+		}
+
+		// Returns as soon as possible if the reaction is useless for the bot
+		if (
+			!reaction.emoji.name ||
+			![voteEmoji, pinEmoji].includes(reaction.emoji.name)
+		)
+			return;
+
+		// Retrieve the full message if it's not cached
+		if (message.partial) {
+			try {
+				await message.fetch();
+			} catch (error) {
+				console.error(
+					`${chalk.redBright.bold("ERROR")} ${chalk.gray(
+						">"
+					)} (messageReactionAdd) Error while fetching full message: ${error}`
 				);
 
 				return;
@@ -69,15 +76,15 @@ const event: Event = {
 			const contest = await Contest.findOne({ where: { channelId } });
 			if (!contest) return;
 
-			if (message.createdTimestamp < contest.startTime.getTime()) return;
+			if (
+				message.createdTimestamp < contest.startTime.getTime() ||
+				message.author?.bot
+			)
+				return;
 
 			const existingVote = await ContestVote.findOne({
 				where: { messageId: message.id, userId: user.id }
 			});
-
-			console.log(existingVote);
-			console.log(message.id);
-			console.log(user.id);
 
 			if (existingVote) return;
 
