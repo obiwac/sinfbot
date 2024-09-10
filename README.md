@@ -1,6 +1,6 @@
 # SinfBot
 
-This repository contains the source code of SinfBot, the Discord bot of the "Sciences informatique" server (which you can join by clicking [here](https://discord.gg/GGqdFYgCn8))
+This repository contains the source code of SinfBot, the Discord bot of the "Sciences informatiques" server (which you can join here: <https://discord.gg/GGqdFYgCn8>)
 
 ## Setup
 
