@@ -1,18 +1,25 @@
 {
-  "name": "discord-sinf-bot",
-  "description": "The Discord bot of students in Computer Science at UCLouvain",
+  "name": "sinfbot",
   "homepage": "https://github.com/obiwac/sinfbot",
+  "version": "2.0.0",
+  "module": "main.ts",
+  "type": "module",
   "scripts": {
-    "start": "node src/bot.js"
-  },
-  "dependencies": {
-    "@discordjs/rest": "^2.0.1",
-    "discord-api-types": "^0.37.55",
-    "discord.js": "^14.13.0",
-    "dotenv": "^16.3.1"
+    "start": "bun src/main.ts"
   },
   "devDependencies": {
-    "eslint": "^8.48.0",
-    "prettier": "^3.0.2"
+    "@types/bun": "latest",
+    "eslint": "^9.4.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "discord.js": "^14.15.3",
+    "dotenv": "^16.4.5",
+    "sequelize": "^6.37.3",
+    "sqlite3": "^5.1.7",
+    "undici": "^6.18.2"
   }
 }

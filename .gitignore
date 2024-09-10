@@ -2,10 +2,11 @@
 node_modules
 log
 *.log
-channels.json*
 
 # editor-related stuff
 .sw[op]
 .idea
+.vscode
 
-meme_contest/*.json
+# db files
+*.sqlite
