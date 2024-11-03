@@ -13,7 +13,7 @@ const command: Command = {
 				isAdmin: false
 			},
 			order: [["amount", "DESC"]],
-			limit: 10
+			limit: 20
 		});
 
 		if (!feurs.length)
