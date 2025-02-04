@@ -1,0 +1,28 @@
+import { SlashCommandBuilder, EmbedBuilder } from "discord.js";
+
+import type { Command } from "../types";
+
+const command: Command = {
+	data: new SlashCommandBuilder()
+		.setName("contribute")
+		.setDescription("Links to the GitHub repository"),
+
+	execute: interaction => {
+		const embed = new EmbedBuilder()
+			.setTitle("Contribute to SinfBot!")
+			.setDescription(
+				"repository link:"
+			)
+			.setThumbnail(
+				"https://images.emojiterra.com/twitter/v13.1/512px/1f517.png"
+			)
+			.addFields({
+				name: "GitHub sinfbot",
+				value: "[Click here to visit the repo](https://github.com/obiwac/sinfbot)"
+			});
+
+		interaction.reply({ embeds: [embed] });
+	}
+};
+
+export default command;
