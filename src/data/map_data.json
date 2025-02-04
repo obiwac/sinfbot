@@ -96,6 +96,12 @@
 		"longitude": 4.6197085
 	},
 	{
+		"name": "Bâtiment science (SCES)",
+		"description": "",
+		"latitude": 50.6684929,
+		"longitude": 4.6197085
+	},
+	{
 		"name": "Cyclotron (CYCL)",
 		"description": "",
 		"latitude": 50.666001,
