@@ -1,8 +1,10 @@
-import chalk from "chalk";
-import { SlashCommandBuilder } from "discord.js";
+import { MessageFlags, SlashCommandBuilder } from "discord.js";
 import { request } from "undici";
 
 import type { Command } from "../types";
+import { getLogger } from "../logger";
+
+const logger = getLogger("bible");
 
 const command: Command = {
 	data: new SlashCommandBuilder()
@@ -21,16 +23,12 @@ const command: Command = {
 
 			interaction.reply(sent);
 		} catch (error) {
-			console.error(
-				`${chalk.redBright.bold("ERROR")} ${chalk.gray(
-					">"
-				)} (bible) Error while fetching API: ${error}`
-			);
+			logger.error({ error }, "Could not fetch API");
 
 			interaction.reply({
 				content:
 					":x: We couldn't fetch any verse (the API is probably down or someone messed up)",
-				ephemeral: true
+				flags: MessageFlags.Ephemeral
 			});
 
 			setTimeout(() => interaction.deleteReply(), 5000);

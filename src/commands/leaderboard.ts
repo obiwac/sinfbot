@@ -1,4 +1,4 @@
-import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
+import { EmbedBuilder, MessageFlags, SlashCommandBuilder } from "discord.js";
 
 import Feur from "../db/models/feur";
 import type { Command } from "../types";
@@ -19,7 +19,7 @@ const command: Command = {
 		if (!feurs.length)
 			return interaction.reply({
 				content: ":x: No one has said feur yet!",
-				ephemeral: true
+				flags: MessageFlags.Ephemeral
 			});
 
 		const embed = new EmbedBuilder()
@@ -32,10 +32,10 @@ const command: Command = {
 								index === 0
 									? "🥇"
 									: index === 1
-									? "🥈"
-									: index === 2
-									? "🥉"
-									: index + 1
+										? "🥈"
+										: index === 2
+											? "🥉"
+											: index + 1
 							}. <@${feur.userId}> - ${feur.amount - 1} feur(s)`
 					)
 					.join("\n")

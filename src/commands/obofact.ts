@@ -1,8 +1,10 @@
-import chalk from "chalk";
-import { SlashCommandBuilder } from "discord.js";
+import { MessageFlags, SlashCommandBuilder } from "discord.js";
 import { request } from "undici";
 
 import type { Command } from "../types";
+import { getLogger } from "../logger";
+
+const logger = getLogger("obofact");
 
 const command: Command = {
 	data: new SlashCommandBuilder()
@@ -21,16 +23,12 @@ const command: Command = {
 
 			return interaction.reply(sent);
 		} catch (error) {
-			console.error(
-				`${chalk.redBright.bold("ERROR")} ${chalk.gray(
-					">"
-				)} (obofact) Error while fetching API: ${error}`
-			);
+			logger.error({ error }, "Could not fetch API");
 
 			interaction.reply({
 				content:
 					":x: We couldn't fetch any Obo fact (the API is probably down or someone messed up)",
-				ephemeral: true
+				flags: MessageFlags.Ephemeral
 			});
 
 			setTimeout(() => interaction.deleteReply(), 5000);

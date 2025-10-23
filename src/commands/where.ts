@@ -1,4 +1,4 @@
-import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
+import { EmbedBuilder, MessageFlags, SlashCommandBuilder } from "discord.js";
 
 import type { Command } from "../types";
 import localisations from "../data/map_data.json";
@@ -28,7 +28,7 @@ const command: Command = {
 			return interaction.reply({
 				content:
 					":x: No element matched your search, try again (you *must* select an element in the list)",
-				ephemeral: true
+				flags: MessageFlags.Ephemeral
 			});
 
 		const embed = new EmbedBuilder()

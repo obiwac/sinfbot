@@ -8,16 +8,19 @@ const command: Command = {
 		.setDescription("Return the list of SinfBot's contributors"),
 
 	execute: interaction => {
-		let contributors = Bun.spawnSync([
-			"git",
-			"shortlog",
-			"-s",
-			"-n",
-			"--all",
-			"--no-merges"
-		]).stdout.toString();
+		let contributors =
+			process.env.GIT_CONTRIBUTORS ||
+			Bun.spawnSync([
+				"git",
+				"shortlog",
+				"-s",
+				"-n",
+				"--all",
+				"--no-merges"
+			]).stdout.toString();
 
 		contributors = contributors
+			.trim()
 			.split("\n")
 			.map(line => line.trim())
 			.map(line => {
