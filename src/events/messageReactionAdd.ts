@@ -1,11 +1,11 @@
 // Is this idea for the pin stolen from the EPLBot? Yes, yes it is.
 // But sharing is caring
 
-import chalk from "chalk";
 import { Events, GuildMember, MessageReaction } from "discord.js";
 
 import type { Event } from "../types";
 import { Contest, ContestMessage, ContestVote } from "../db/models/contest";
+import { getLogger } from "../logger";
 
 const pinRoleId = process.env.PIN_ROLE_ID!;
 const pinEmoji = process.env.PIN_EMOJI!;
@@ -13,6 +13,8 @@ const pinThreshold = Number(process.env.PIN_THRESHOLD!);
 const excludedChannels = process.env.PIN_EXCLUDED_CHANNELS!.split(",");
 
 const voteEmoji = process.env.VOTE_EMOJI!;
+
+const logger = getLogger("messageReactionAdd");
 
 const event: Event = {
 	name: Events.MessageReactionAdd,
@@ -25,12 +27,7 @@ const event: Event = {
 			try {
 				await reaction.fetch();
 			} catch (error) {
-				console.error(
-					`${chalk.redBright.bold("ERROR")} ${chalk.gray(
-						">"
-					)} (messageReactionAdd) Error while fetching full reaction: ${error}`
-				);
-
+				logger.error({ error }, "Could not fetch full reaction");
 				return;
 			}
 		}
@@ -47,12 +44,7 @@ const event: Event = {
 			try {
 				await message.fetch();
 			} catch (error) {
-				console.error(
-					`${chalk.redBright.bold("ERROR")} ${chalk.gray(
-						">"
-					)} (messageReactionAdd) Error while fetching full message: ${error}`
-				);
-
+				logger.error({ error }, "Could not fetch full message");
 				return;
 			}
 		}

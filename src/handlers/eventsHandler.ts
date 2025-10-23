@@ -1,22 +1,22 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import chalk from "chalk";
 import { type Client } from "discord.js";
 
+import { getLogger } from "../logger";
 import type { Event } from "../types";
+
+const logger = getLogger("eventsHandler");
 
 export default (client: Client) => {
 	let eventsDir = path.join(__dirname, "../events");
 
 	fs.readdirSync(eventsDir).forEach(async file => {
 		if (!file.endsWith(".ts")) {
-			console.log(
-				`${chalk.yellow("WARN")} ${chalk.gray(
-					">"
-				)} Skipping event file ${file} (not a Typescript file)`
+			logger.warn(
+				{ file, reason: "Not a Typescript file" },
+				"Skipping event"
 			);
-
 			return;
 		}
 
@@ -24,12 +24,10 @@ export default (client: Client) => {
 			`file://${eventsDir}/${file}`
 		);
 		if (!event) {
-			console.log(
-				`${chalk.yellow("WARN")} ${chalk.gray(
-					">"
-				)} Skipping event file ${file} (import returned "undefined", is the event correctly exported?)`
+			logger.warn(
+				{ file, reason: 'Import returned "undefined"' },
+				"Skipping event"
 			);
-
 			return;
 		}
 
@@ -37,10 +35,6 @@ export default (client: Client) => {
 			? client.once(event.name, (...args) => event.execute(...args))
 			: client.on(event.name, (...args) => event.execute(...args));
 
-		console.log(
-			`${chalk.cyan("INFO")} ${chalk.gray(">")} Loaded event ${
-				event.name
-			}`
-		);
+		logger.info({ event: event.name }, "Loaded event");
 	});
 };

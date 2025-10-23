@@ -3,6 +3,7 @@ import {
 	ButtonStyle,
 	ComponentType,
 	EmbedBuilder,
+	MessageFlags,
 	SlashCommandBuilder,
 	TextChannel,
 	TextInputStyle,
@@ -10,7 +11,7 @@ import {
 } from "discord.js";
 import {
 	ActionRowBuilder,
-	type ModalActionRowComponentBuilder,
+	LabelBuilder,
 	ModalBuilder,
 	TextInputBuilder
 } from "@discordjs/builders";
@@ -49,7 +50,7 @@ const command: Command = {
 				return interaction.reply({
 					content:
 						":x: You don't have any previous confession, use `/confess new` to create a new one",
-					ephemeral: true
+					flags: MessageFlags.Ephemeral
 				});
 
 			modal
@@ -59,19 +60,17 @@ const command: Command = {
 
 		const confessText = new TextInputBuilder()
 			.setCustomId("confessText")
-			.setLabel("Your confession")
 			.setPlaceholder(
 				"No questions that could be sent publicly, no hate (thanks <3)"
 			)
 			.setStyle(TextInputStyle.Paragraph)
 			.setRequired(true);
 
-		const actionRow =
-			new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(
-				confessText
-			);
+		const confessLabel = new LabelBuilder()
+			.setLabel("Your confession")
+			.setTextInputComponent(confessText);
 
-		modal.addComponents(actionRow);
+		modal.addLabelComponents(confessLabel);
 
 		await interaction.showModal(modal);
 	},
@@ -291,7 +290,7 @@ const command: Command = {
 					)
 					.setColor(0x5865f2)
 			],
-			ephemeral: true
+			flags: MessageFlags.Ephemeral
 		});
 	},
 

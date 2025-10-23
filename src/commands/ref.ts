@@ -1,4 +1,4 @@
-import { SlashCommandBuilder } from "discord.js";
+import { MessageFlags, SlashCommandBuilder } from "discord.js";
 
 import type { Command } from "../types";
 import refs from "../data/refs.json";
@@ -27,7 +27,7 @@ const command: Command = {
 			return interaction.reply({
 				content:
 					":x: No element matched your search, try again (you *must* select an element in the list)",
-				ephemeral: true
+				flags: MessageFlags.Ephemeral
 			});
 
 		interaction.reply(data.text);

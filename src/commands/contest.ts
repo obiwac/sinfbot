@@ -1,6 +1,7 @@
 import {
 	ChannelType,
 	EmbedBuilder,
+	MessageFlags,
 	PermissionFlagsBits,
 	SlashCommandBuilder,
 	TextChannel
@@ -77,13 +78,13 @@ const command: Command = {
 				return interaction.reply({
 					content:
 						":x: Contests can only be created in text channels",
-					ephemeral: true
+					flags: MessageFlags.Ephemeral
 				});
 
 			if (isNaN(endTimeDate.getTime()) || endTimeDate < new Date())
 				return interaction.reply({
 					content: ":x: Invalid date",
-					ephemeral: true
+					flags: MessageFlags.Ephemeral
 				});
 
 			const existingContest = await Contest.findOne({
@@ -92,7 +93,7 @@ const command: Command = {
 			if (existingContest) {
 				return interaction.reply({
 					content: ":x: Contest with the same name already exists",
-					ephemeral: true
+					flags: MessageFlags.Ephemeral
 				});
 			}
 
@@ -105,7 +106,7 @@ const command: Command = {
 
 			interaction.reply({
 				content: `:white_check_mark: Contest \`${name}\` created`,
-				ephemeral: true
+				flags: MessageFlags.Ephemeral
 			});
 
 			const embed = new EmbedBuilder()
@@ -133,7 +134,7 @@ const command: Command = {
 			if (contests.length === 0)
 				return interaction.reply({
 					content: ":x: No ongoing contests",
-					ephemeral: true
+					flags: MessageFlags.Ephemeral
 				});
 
 			const embed = new EmbedBuilder()
@@ -149,7 +150,10 @@ const command: Command = {
 					}))
 				);
 
-			interaction.reply({ embeds: [embed], ephemeral: true });
+			interaction.reply({
+				embeds: [embed],
+				flags: MessageFlags.Ephemeral
+			});
 		} else {
 			const name = interaction.options.getString("name", true);
 			const contest = await Contest.findOne({
@@ -159,7 +163,7 @@ const command: Command = {
 			if (!contest)
 				return interaction.reply({
 					content: ":x: Contest not found",
-					ephemeral: true
+					flags: MessageFlags.Ephemeral
 				});
 
 			const winner = await ContestMessage.findOne({
@@ -170,7 +174,7 @@ const command: Command = {
 			if (!winner)
 				return interaction.reply({
 					content: ":x: No entries found",
-					ephemeral: true
+					flags: MessageFlags.Ephemeral
 				});
 
 			const channel = interaction.guild?.channels.cache.get(
@@ -180,7 +184,7 @@ const command: Command = {
 			if (!channel)
 				return interaction.reply({
 					content: ":x: Channel not found",
-					ephemeral: true
+					flags: MessageFlags.Ephemeral
 				});
 
 			const message = await (channel as TextChannel).messages.fetch(
@@ -197,7 +201,7 @@ const command: Command = {
 
 			interaction.reply({
 				content: `:white_check_mark: Contest \`${name}\` ended`,
-				ephemeral: true
+				flags: MessageFlags.Ephemeral
 			});
 
 			(channel as TextChannel).send({ embeds: [embed] });

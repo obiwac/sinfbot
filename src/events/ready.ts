@@ -1,7 +1,10 @@
-import chalk from "chalk";
 import { Events, type Client } from "discord.js";
-import type { Event } from "../types";
+
 import db from "../db/main";
+import { getLogger } from "../logger";
+import type { Event } from "../types";
+
+const logger = getLogger("ready");
 
 const event: Event = {
 	name: Events.ClientReady,
@@ -9,24 +12,13 @@ const event: Event = {
 	execute: async (client: Client) => {
 		try {
 			await db.sync();
-			console.log(
-				`${chalk.cyan("INFO")} ${chalk.gray(">")} Database synced`
-			);
+			logger.info("Database synced");
 		} catch (error) {
-			console.error(
-				`${chalk.red("Error")} ${chalk.gray(
-					">"
-				)} Failed to sync the database: ${error}`
-			);
-
+			logger.error({ error }, "Database sync failed");
 			process.exit(1);
 		}
 
-		console.log(
-			`${chalk.green.bold("Ready")} ${chalk.gray(
-				">"
-			)} Client logged in as ${client.user?.tag}`
-		);
+		logger.info({ user: client.user?.tag }, "Client logged in");
 	}
 };
 

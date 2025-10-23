@@ -11,15 +11,11 @@ const command: Command = {
 		const embed = new EmbedBuilder()
 			.setTitle("Contribute to SinfBot!")
 			.setDescription(
-				"repository link:"
+				"Checkout the GitHub repository [here](https://github.com/obiwac/sinfbot)"
 			)
 			.setThumbnail(
 				"https://images.emojiterra.com/twitter/v13.1/512px/1f517.png"
-			)
-			.addFields({
-				name: "GitHub sinfbot",
-				value: "[Click here to visit the repo](https://github.com/obiwac/sinfbot)"
-			});
+			);
 
 		interaction.reply({ embeds: [embed] });
 	}

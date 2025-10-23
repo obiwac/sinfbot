@@ -6,18 +6,20 @@ WORKDIR /app
 ARG GIT_COMMIT
 ARG GIT_BRANCH
 ARG GIT_REMOTE
+ARG GIT_CONTRIBUTORS
 
 ENV GIT_COMMIT=$GIT_COMMIT
 ENV GIT_BRANCH=$GIT_BRANCH
 ENV GIT_REMOTE=$GIT_REMOTE
+ENV GIT_CONTRIBUTORS=$GIT_CONTRIBUTORS
 
 FROM base AS install
 RUN mkdir -p /temp/dev
-COPY package.json bun.lockb /temp/dev/
+COPY package.json bun.lock /temp/dev/
 RUN cd /temp/dev && bun install --frozen-lockfile
 
 RUN mkdir -p /temp/prod
-COPY package.json bun.lockb /temp/prod/
+COPY package.json bun.lock /temp/prod/
 RUN cd /temp/prod && bun install --frozen-lockfile --production
 
 FROM base AS prerelease

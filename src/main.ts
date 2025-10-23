@@ -1,11 +1,11 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import chalk from "chalk";
 import { Client, Collection, GatewayIntentBits, Partials } from "discord.js";
 import "dotenv/config";
 
-import { type Command } from "./types";
+import { getLogger } from "./logger";
+import type { Command } from "./types";
 
 const client = new Client({
 	intents: [
@@ -17,6 +17,7 @@ const client = new Client({
 	partials: [Partials.Message, Partials.Channel, Partials.Reaction]
 });
 const handlersDir = path.join(__dirname, "./handlers");
+const logger = getLogger("main");
 
 client.commands = new Collection<string, Command>();
 client.cooldowns = new Collection<string, number>();
@@ -24,23 +25,19 @@ client.cooldowns = new Collection<string, number>();
 (async () => {
 	for (const handler of fs.readdirSync(handlersDir)) {
 		if (!handler.endsWith(".ts")) {
-			console.log(
-				`${chalk.yellow("WARN")} ${chalk.gray(
-					">"
-				)} Skipping handler file ${handler} (not a Typescript file)`
+			logger.warn(
+				{ handler, reason: "Not a Typescript file" },
+				"Skipping handler"
 			);
-
 			continue;
 		}
 
 		const handlerLoader = await import(`file://${handlersDir}/${handler}`);
 		if (!handlerLoader.default) {
-			console.log(
-				`${chalk.yellow("WARN")} ${chalk.gray(
-					">"
-				)} Skipping handler file ${handler} (import returned "undefined", is the handler correctly exported?)`
+			logger.warn(
+				{ handler, reason: 'Import returned "undefined"' },
+				"Skipping handler"
 			);
-
 			continue;
 		}
 

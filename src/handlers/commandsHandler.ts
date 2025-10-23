@@ -1,10 +1,12 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import chalk from "chalk";
 import { REST, type Client, Routes, SharedSlashCommand } from "discord.js";
 
+import { getLogger } from "../logger";
 import type { Command } from "../types";
+
+const logger = getLogger("commandsHandler");
 
 export default async (client: Client) => {
 	const rest = new REST().setToken(process.env.DISCORD_TOKEN!);
@@ -16,12 +18,10 @@ export default async (client: Client) => {
 
 		for (const file of commandFiles) {
 			if (!file.endsWith(".ts")) {
-				console.log(
-					`${chalk.yellow("WARN")} ${chalk.gray(
-						">"
-					)} Skipping command file ${file} (not a Typescript file)`
+				logger.warn(
+					{ file, reason: "Not a Typescript file" },
+					"Skipping command"
 				);
-
 				continue;
 			}
 
@@ -30,12 +30,10 @@ export default async (client: Client) => {
 			);
 
 			if (!command) {
-				console.log(
-					`${chalk.yellow("WARN")} ${chalk.gray(
-						">"
-					)} Skipping command file ${file} (import returned "undefined", is the command correctly exported?)`
+				logger.warn(
+					{ file, reason: 'Import returned "undefined"' },
+					"Skipping command"
 				);
-
 				continue;
 			}
 
@@ -51,18 +49,12 @@ export default async (client: Client) => {
 			{ body: commands }
 		);
 
-		console.log(
-			`${chalk.cyan("INFO")} ${chalk.gray(">")} Loaded and registered ${
-				res.length
-			} command(s)`
+		logger.info(
+			{ num_commands: res.length },
+			"Loaded and registered commands"
 		);
 	} catch (error) {
-		console.error(
-			`${chalk.redBright.bold("ERROR")} ${chalk.gray(
-				">"
-			)} Error while registering commands: ${error}`
-		);
-
+		logger.error({ error }, "Couldn't register commands");
 		process.exit(1);
 	}
 };

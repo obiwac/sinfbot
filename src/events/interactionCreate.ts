@@ -1,6 +1,9 @@
-import chalk from "chalk";
-import { Events, type Interaction } from "discord.js";
+import { Events, MessageFlags, type Interaction } from "discord.js";
+
+import { getLogger } from "../logger";
 import type { Event } from "../types";
+
+const logger = getLogger("interactionCreate");
 
 const event: Event = {
 	name: Events.InteractionCreate,
@@ -20,7 +23,7 @@ const event: Event = {
 						content: `:hourglass: You can reuse this command in ${Math.floor(
 							Math.abs(Date.now() - cooldown) / 1000
 						)} second(s)`,
-						ephemeral: true
+						flags: MessageFlags.Ephemeral
 					});
 					setTimeout(() => interaction.deleteReply(), 5000);
 
@@ -53,12 +56,9 @@ const event: Event = {
 			try {
 				command.autocomplete(interaction);
 			} catch (error) {
-				console.error(
-					`${chalk.redBright.bold("ERROR")} ${chalk.gray(
-						">"
-					)} Error while trying to autocomplete ${
-						interaction.commandName
-					}: ${error}`
+				logger.error(
+					{ command: interaction.commandName, error },
+					"Could not autocomplete"
 				);
 			}
 		} else if (interaction.isModalSubmit()) {
@@ -70,12 +70,9 @@ const event: Event = {
 			try {
 				command.modal(interaction);
 			} catch (error) {
-				console.error(
-					`${chalk.redBright.bold("ERROR")} ${chalk.gray(
-						">"
-					)} Error while processing modal ${
-						interaction.customId
-					}: ${error}`
+				logger.error(
+					{ modal: interaction.customId, error },
+					"Could not process modal"
 				);
 			}
 		}

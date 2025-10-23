@@ -1,4 +1,8 @@
-import { PermissionFlagsBits, SlashCommandBuilder } from "discord.js";
+import {
+	MessageFlags,
+	PermissionFlagsBits,
+	SlashCommandBuilder
+} from "discord.js";
 
 import type { Command } from "../types";
 
@@ -28,7 +32,7 @@ const command: Command = {
 
 		interaction.reply({
 			content: `:white_check_mark: Set environment variable \`${key}\` to \`${value}\``,
-			ephemeral: true
+			flags: MessageFlags.Ephemeral
 		});
 	}
 };
