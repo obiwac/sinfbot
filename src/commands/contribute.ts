@@ -11,7 +11,7 @@ const command: Command = {
 		const embed = new EmbedBuilder()
 			.setTitle("Contribute to SinfBot!")
 			.setDescription(
-				"Checkout the GitHub repository [here](https://github.com/obiwac/sinfbot)"
+				"Check out the GitHub repository [here](https://github.com/obiwac/sinfbot)"
 			)
 			.setThumbnail(
 				"https://images.emojiterra.com/twitter/v13.1/512px/1f517.png"
