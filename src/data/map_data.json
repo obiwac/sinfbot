@@ -202,5 +202,11 @@
 		"description": "",
 		"latitude": 50.6680754,
 		"longitude": 4.6175355
+	},
+	{
+		"name": "KFET",
+		"description": "Cafeteria St Barbe",
+		"latitude": 50.66831150355334,
+		"longitude": 4.620905264642222
 	}
 ]
