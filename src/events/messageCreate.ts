@@ -4,10 +4,20 @@ import Feur from "../db/models/feur";
 import type { Event } from "../types";
 
 const feurRegex = /\b(?:f\s*e\s*u\s*r|feur)\b/gi;
+const funString = [
+    "That's right, His Majesty is abusing his privileges", 
+    "Do you think it's funny to play at being a mini-dictator? Just so you know, a revolution is in the works", 
+    "Go ahead, abuse your tiny bit of power. But don't forget that the tables will turn",
+    "That's great, keep ruling like a tyrant...",
+    "Enjoy your power while it lasts. Tyrants always fall"
+    ];
 
 const event: Event = {
 	name: Events.MessageCreate,
 	execute: async (message: Message) => {
+
+		const isAdmin = message.member?.permissions.has(PermissionFlagsBits.KickMembers);
+
 		if (message.author.bot) return;
 
 		if (message.content.match(feurRegex)) {
@@ -27,29 +37,40 @@ const event: Event = {
 			await Feur.update(
 				{
 					amount: currAmount + 1,
-					isAdmin: message.member?.permissions.has(
-						PermissionFlagsBits.KickMembers
-					)
+					isAdmin: isAdmin
 				},
 				{ where: { userId: message.author.id } }
 			);
 
-			try {
-				await message.member?.timeout(
-					timeout_time,
-					`Said feur ${currAmount} time(s)`
-				);
+			const randomFunString = funString[Math.floor(Math.random()*funString.length)];
+			const adminMessage = `You saif feur ${feur.amount} time(s). That's amazing!\n${randomFunString}`;
 
-				message.reply(
-					`You said feur ${currAmount} time(s), you'll be timed out for ${
-						timeout_time / 1000
-					} seconds!`
-				);
+			try {
+				if(!isAdmin){
+					await message.member?.timeout(
+						timeout_time,
+						`Said feur ${currAmount} time(s)`
+					);
+
+					message.reply(
+						`You said feur ${currAmount} time(s), you'll be timed out for ${
+							timeout_time / 1000
+						} seconds!`
+					);
+				}
+
+				// just to be sure, Modo can't be TO anymore
+				else{
+
+					message.reply(adminMessage);
+				}
+				
 			} catch (_) {
 				// Bot doesn't have the permission
-				message.reply(
-					`You said feur ${feur.amount} time(s). That's amazing!`
-				);
+				message.reply(adminMessage);
+
+				// Bro is cheating with higher perms on discord
+				await Feur.update({ isAdmin: true}, { where: { userId: message.author.id }});
 			}
 		}
 	}
