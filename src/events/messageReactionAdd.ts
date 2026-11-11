@@ -1,11 +1,12 @@
 // Is this idea for the pin stolen from the EPLBot? Yes, yes it is.
 // But sharing is caring
 
-import { Events, GuildMember, MessageReaction } from "discord.js";
+import { Events, GuildMember, MessageReaction, TextChannel, PermissionFlagsBits } from "discord.js";
 
 import type { Event } from "../types";
 import { Contest, ContestMessage, ContestVote } from "../db/models/contest";
 import { getLogger } from "../logger";
+import Blindtest from "../db/models/blindtest";
 
 const pinRoleId = process.env.PIN_ROLE_ID!;
 const pinEmoji = process.env.PIN_EMOJI!;
@@ -13,6 +14,7 @@ const pinThreshold = Number(process.env.PIN_THRESHOLD!);
 const excludedChannels = process.env.PIN_EXCLUDED_CHANNELS!.split(",");
 
 const voteEmoji = process.env.VOTE_EMOJI!;
+const blindtestEmoji = process.env.BLINDTEST_EMOJI!;
 
 const logger = getLogger("messageReactionAdd");
 
@@ -35,7 +37,7 @@ const event: Event = {
 		// Returns as soon as possible if the reaction is useless for the bot
 		if (
 			!reaction.emoji.name ||
-			![voteEmoji, pinEmoji].includes(reaction.emoji.name)
+			![voteEmoji, pinEmoji, blindtestEmoji].includes(reaction.emoji.name)
 		)
 			return;
 
@@ -47,6 +49,34 @@ const event: Event = {
 				logger.error({ error }, "Could not fetch full message");
 				return;
 			}
+		}
+
+		// Blindtest logic
+		if (reaction.emoji.name === blindtestEmoji){
+			
+			const blindtestChannel = (await reaction.client.channels.fetch(
+						process.env.BLINDTEST_CHANNEL_ID!
+					)) as TextChannel;
+
+			const isAdmin = message.guild?.members.cache.get(user.id)?.permissions.has(PermissionFlagsBits.KickMembers);
+			const thread = blindtestChannel.threads.cache.find((x) => x.id === channelId);
+
+			if(!isAdmin || !thread)
+				return;
+
+			const [blind] = await Blindtest.findOrCreate(
+				{ where: { userId: message.author?.id } }
+			);
+
+			const score = blind.score +1;
+
+			await Blindtest.update(
+				{ score: score },
+				{ where: { userId: message.author?.id } }
+			);
+
+			await message.reply(`${message.author} a un score de ${score}`);
+			await thread.leave();
 		}
 
 		// Pin logic
