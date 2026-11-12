@@ -75,7 +75,6 @@ const event: Event = {
 				{ where: { userId: message.author?.id } }
 			);
 
-			await message.reply(`${message.author} a un score de ${score}`);
 			await thread.leave();
 		}
 
