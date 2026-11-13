@@ -18,7 +18,7 @@ Feur.init(
 		},
 		amount: {
 			type: DataTypes.INTEGER,
-			defaultValue: 1
+			defaultValue: 0
 		},
 		isAdmin: {
 			type: DataTypes.BOOLEAN,
