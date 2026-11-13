@@ -1,7 +1,13 @@
 // Is this idea for the pin stolen from the EPLBot? Yes, yes it is.
 // But sharing is caring
 
-import { Events, GuildMember, MessageReaction, TextChannel, PermissionFlagsBits } from "discord.js";
+import {
+	Events,
+	GuildMember,
+	MessageReaction,
+	TextChannel,
+	PermissionFlagsBits
+} from "discord.js";
 
 import type { Event } from "../types";
 import Blindtest from "../db/models/blindtest";
@@ -52,23 +58,25 @@ const event: Event = {
 		}
 
 		// Blindtest logic
-		if (reaction.emoji.name === blindtestEmoji){
-			
+		if (reaction.emoji.name === blindtestEmoji) {
 			const blindtestChannel = (await reaction.client.channels.fetch(
-						process.env.BLINDTEST_CHANNEL_ID!
-					)) as TextChannel;
+				process.env.BLINDTEST_CHANNEL_ID!
+			)) as TextChannel;
 
-			const isAdmin = message.guild?.members.cache.get(user.id)?.permissions.has(PermissionFlagsBits.KickMembers);
-			const thread = blindtestChannel.threads.cache.find((x) => x.id === channelId);
-
-			if(!isAdmin || !thread)
-				return;
-
-			const [blind] = await Blindtest.findOrCreate(
-				{ where: { userId: message.author?.id } }
+			const isAdmin = message.guild?.members.cache
+				.get(user.id)
+				?.permissions.has(PermissionFlagsBits.KickMembers);
+			const thread = blindtestChannel.threads.cache.find(
+				x => x.id === channelId
 			);
 
-			const score = blind.score +1;
+			if (!isAdmin || !thread) return;
+
+			const [blind] = await Blindtest.findOrCreate({
+				where: { userId: message.author?.id }
+			});
+
+			const score = blind.score + 1;
 
 			await Blindtest.update(
 				{ score: score },

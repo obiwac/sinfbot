@@ -10,9 +10,7 @@ import {
 	type MessageActionRowComponentBuilder
 } from "discord.js";
 
-import {
-	ActionRowBuilder
-} from "@discordjs/builders";
+import { ActionRowBuilder } from "@discordjs/builders";
 
 import type { Command } from "../types";
 import { pipeline } from "node:stream/promises";
@@ -27,23 +25,25 @@ const command: Command = {
 	data: new SlashCommandBuilder()
 		.setName("blindtest")
 		.setDescription("Suggest a song for the blindtest")
-        .addStringOption(option =>
-            option
-                .setName("show")
-                .setDescription("The name of the show (or game) you want to suggest")
-                .setRequired(true)
-        )
-        .addStringOption(option =>
-            option
-                .setName("link")
-                .setDescription("The youtube link of you requested song")
-                .setRequired(true)
-        ),
+		.addStringOption(option =>
+			option
+				.setName("show")
+				.setDescription(
+					"The name of the show (or game) you want to suggest"
+				)
+				.setRequired(true)
+		)
+		.addStringOption(option =>
+			option
+				.setName("link")
+				.setDescription("The youtube link of you requested song")
+				.setRequired(true)
+		),
 
 	execute: async interaction => {
-        const songUrl = interaction.options.getString("link",true);
-        const showName = interaction.options.getString("show",true);
-        const requester = interaction.user
+		const songUrl = interaction.options.getString("link", true);
+		const showName = interaction.options.getString("show", true);
+		const requester = interaction.user;
 		const ytb = new Ytdl();
 
 		// Check whether it is a YouTube link or whether the video is not private
@@ -51,32 +51,34 @@ const command: Command = {
 			const info = await ytb.getInfo(songUrl);
 		} catch (error) {
 			interaction.reply({
-			embeds: [
-				new EmbedBuilder()
-					.setTitle("Error")
-					.setDescription(
-						"Something bad happened. Are you sure your link comes from YouTube?\nIf so, the website is probably down."
-					)
-					.setColor(0x5865f2)
-			],
-			flags: MessageFlags.Ephemeral
-		});
-		return;
+				embeds: [
+					new EmbedBuilder()
+						.setTitle("Error")
+						.setDescription(
+							"Something bad happened. Are you sure your link comes from YouTube?\nIf so, the website is probably down."
+						)
+						.setColor(0x5865f2)
+				],
+				flags: MessageFlags.Ephemeral
+			});
+			return;
 		}
 
-        const adminChannel = (await interaction.client.channels.fetch(
-            process.env.BLINDTEST_ADMIN_CHANNEL_ID!
-        )) as TextChannel;
+		const adminChannel = (await interaction.client.channels.fetch(
+			process.env.BLINDTEST_ADMIN_CHANNEL_ID!
+		)) as TextChannel;
 
-        const blindtestChannel = (await interaction.client.channels.fetch(
-            process.env.BLINDTEST_CHANNEL_ID!
-        )) as TextChannel;
+		const blindtestChannel = (await interaction.client.channels.fetch(
+			process.env.BLINDTEST_CHANNEL_ID!
+		)) as TextChannel;
 
-        const embedAdmin = new EmbedBuilder()
-            .setTitle("Blindtest")
-			.setDescription(`${requester} has requested a song from ${codeBlock(showName)}Here is the link ${songUrl} `)
+		const embedAdmin = new EmbedBuilder()
+			.setTitle("Blindtest")
+			.setDescription(
+				`${requester} has requested a song from ${codeBlock(showName)}Here is the link ${songUrl} `
+			);
 
-        const approveButton = new ButtonBuilder()
+		const approveButton = new ButtonBuilder()
 			.setCustomId("approve")
 			.setLabel("Approve")
 			.setStyle(ButtonStyle.Success)
@@ -88,29 +90,29 @@ const command: Command = {
 			.setStyle(ButtonStyle.Secondary)
 			.setEmoji({ name: "❌" });
 
-        const actionRow =
+		const actionRow =
 			new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(
 				approveButton,
-				rejectButton,
+				rejectButton
 			);
 
-        let vote = await adminChannel.send({
+		let vote = await adminChannel.send({
 			embeds: [embedAdmin],
 			components: [actionRow]
 		});
 
-        const collector = vote.createMessageComponentCollector({
+		const collector = vote.createMessageComponentCollector({
 			componentType: ComponentType.Button,
 			time: vote_minutes * 60 * 1000
 		});
 
-        collector.on("collect", async i => {
+		collector.on("collect", async i => {
 			collector.stop();
 			i.deferUpdate(); // Acknoledges the interaction without doing anything
 
 			switch (i.customId) {
 				case "approve":
-                    let sentBlindtest;
+					let sentBlindtest;
 
 					vote.edit({
 						embeds: [
@@ -121,27 +123,37 @@ const command: Command = {
 						components: []
 					});
 
-                    // download the music
-                    const info = await ytb.getInfo(songUrl);
-                    await pipeline(
-                        ytb.download(info, { quality: Quality.HighestAudio, filter: { hasAudio: true, hasVideo: false } }),
-                        createWriteStream("./src/data/audio.mp3")
-                    ); 
+					// download the music
+					const info = await ytb.getInfo(songUrl);
+					await pipeline(
+						ytb.download(info, {
+							quality: Quality.HighestAudio,
+							filter: { hasAudio: true, hasVideo: false }
+						}),
+						createWriteStream("./src/data/audio.mp3")
+					);
 
-                    // trim it at 1 min
-                    const audio = await ffmpeg("./src/data/audio.mp3")
-                    await audio
-                            .setVideoDuration(60)
-                            .save("./src/data/newAudio.mp3")
+					// trim it at 1 min
+					const audio = await ffmpeg("./src/data/audio.mp3");
+					await audio
+						.setVideoDuration(60)
+						.save("./src/data/newAudio.mp3");
 
-                    // send it to the channel
-                    sentBlindtest = await blindtestChannel.send( {files: [{ attachment: "./src/data/newAudio.mp3", name:"audio.mp3" }]});
-                    await sentBlindtest.startThread({name:"Answer"});
+					// send it to the channel
+					sentBlindtest = await blindtestChannel.send({
+						files: [
+							{
+								attachment: "./src/data/newAudio.mp3",
+								name: "audio.mp3"
+							}
+						]
+					});
+					await sentBlindtest.startThread({ name: "Answer" });
 
-                    // remove the files 
-                    unlink("./src/data/audio.mp3");
-                    unlink("./src/data/newAudio.mp3");
-                   
+					// remove the files
+					unlink("./src/data/audio.mp3");
+					unlink("./src/data/newAudio.mp3");
+
 					interaction.user
 						.send({
 							embeds: [
@@ -184,7 +196,7 @@ const command: Command = {
 			}
 		});
 
-        collector.on("end", async (_, reason) => {
+		collector.on("end", async (_, reason) => {
 			if (reason === "time") {
 				// Vote timed out
 				vote.edit({
@@ -209,7 +221,7 @@ const command: Command = {
 			}
 		});
 
-        interaction.reply({
+		interaction.reply({
 			embeds: [
 				new EmbedBuilder()
 					.setTitle("Blindtest sent")
@@ -220,10 +232,7 @@ const command: Command = {
 			],
 			flags: MessageFlags.Ephemeral
 		});
-
-        
-        
 	},
-    cooldown: 5
-}
+	cooldown: 5
+};
 export default command;
