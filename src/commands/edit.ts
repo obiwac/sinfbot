@@ -7,11 +7,11 @@ import type { Command } from "../types";
 const command: Command = {
     data: new SlashCommandBuilder()
         .setName("edit")
-        .setDescription("edit a user in the DataBase (blindtest or feur)")
+        .setDescription("Edit a user in the dataBase (blindtest or feur)")
         .addSubcommand(subcommand =>
             subcommand
                 .setName("blindtest")
-                .setDescription("edit the blindtest database")
+                .setDescription("Edit the blindtest database")
                 .addUserOption(option =>
                     option
                         .setName("user")
@@ -29,7 +29,7 @@ const command: Command = {
         .addSubcommand(subcommand =>
             subcommand
                 .setName("feur")
-                .setDescription("edit the feur database")
+                .setDescription("Edit the feur database")
                 .addUserOption(option => 
                     option
                         .setName("user")

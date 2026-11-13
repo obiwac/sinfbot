@@ -27,10 +27,10 @@ const command: Command = {
 		.setName("leaderboard")
 		.setDescription("See who's the feur master")
 		.addSubcommand(subcommand =>
-			subcommand.setName("feur").setDescription("get the feur leaderboard")
+			subcommand.setName("feur").setDescription("Get the feur leaderboard")
 		)
 		.addSubcommand(subcommand =>
-			subcommand.setName("blindtest").setDescription("get the blindtest leaderboard")
+			subcommand.setName("blindtest").setDescription("Get the blindtest leaderboard")
 		),
 	execute: async interaction => {
 		// feur case
