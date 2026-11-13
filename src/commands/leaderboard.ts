@@ -16,7 +16,7 @@ function generateEmbed(title: string, data: (Feur|Blindtest)[]){
 										index === 1 ? "🥈" :
 										index === 2 ? "🥉" :
 										index + 1
-									}. <@${element.userId}> - ${element instanceof Feur? element.amount-1: element.score} ${str}`
+									}. <@${element.userId}> - ${element instanceof Feur? element.amount: element.score} ${str}`
 							).join("\n")
 		);
 	return embed

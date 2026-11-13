@@ -1,4 +1,4 @@
-import { Events, Message, PermissionFlagsBits } from "discord.js";
+import { Events, Message, PermissionFlagsBits, time } from "discord.js";
 
 import Feur from "../db/models/feur";
 import type { Event } from "../types";
@@ -28,22 +28,22 @@ const event: Event = {
 			});
 
 			// Max timeout time is 28 days for the API
-			const currAmount = feur.amount;
+			const currAmount = feur.amount+1;
 			const timeout_time = Math.min(
-				Math.pow(2, feur.amount) * 1000,
+				Math.pow(2, currAmount) * 1000,
 				28 * 24 * 60 * 60 * 1000
 			);
 
 			await Feur.update(
 				{
-					amount: currAmount + 1,
+					amount: currAmount,
 					isAdmin: isAdmin
 				},
 				{ where: { userId: message.author.id } }
 			);
 
 			const randomFunString = funString[Math.floor(Math.random()*funString.length)];
-			const adminMessage = `You said feur ${feur.amount} time(s). That's amazing!\n${randomFunString}`;
+			const adminMessage = `You said feur ${currAmount} time(s). That's amazing!\n${randomFunString}`;
 
 			try {
 				if(!isAdmin){
@@ -52,10 +52,23 @@ const event: Event = {
 						`Said feur ${currAmount} time(s)`
 					);
 
+					const realTimeoutTime = timeout_time/1000;
+					
+					const d = Math.floor(realTimeoutTime/(24*3600));
+					const h = Math.floor(realTimeoutTime%(24*3600)/3600);
+					const m = Math.floor(realTimeoutTime%3600/60);
+					const s = Math.floor(realTimeoutTime%60);
+
+					const timeOutput = 
+									d == 28 ? `${d} days`:
+									d > 0 ? `${d} days ${h} hours`:
+									h > 0 ? `${h} hours ${m} minutes`:
+									m > 0 ? `${m} minutes ${s} seconds`:
+									`${s} seconds`;
+
+
 					message.reply(
-						`You said feur ${currAmount} time(s), you'll be timed out for ${
-							timeout_time / 1000
-						} seconds!`
+						`You said feur ${currAmount} time(s), you'll be timed out for ${timeOutput}!`
 					);
 				}
 
