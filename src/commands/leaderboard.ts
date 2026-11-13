@@ -4,6 +4,24 @@ import Feur from "../db/models/feur";
 import Blindtest from "../db/models/blindtest";
 import type { Command } from "../types";
 
+function generateEmbed(title: string, data: (Feur|Blindtest)[]){
+	const str = title === "Feur" ? " feur(s)" : "";
+	const embed = new EmbedBuilder()
+		.setTitle(`${title} Leaderboard`)
+		.setDescription(data
+							.map(
+								(element,index) =>
+									`${
+										index === 0 ? "🥇" :
+										index === 1 ? "🥈" :
+										index === 2 ? "🥉" :
+										index + 1
+									}. <@${element.userId}> - ${element instanceof Feur? element.amount-1: element.score} ${str}`
+							).join("\n")
+		);
+	return embed
+}
+
 const command: Command = {
 	data: new SlashCommandBuilder()
 		.setName("leaderboard")
@@ -32,26 +50,7 @@ const command: Command = {
 					flags: MessageFlags.Ephemeral
 				});
 
-			const embed = new EmbedBuilder()
-				.setTitle("Feur Leaderboard")
-				.setDescription(
-					feurs
-						.map(
-							(feur, index) =>
-								`${
-									index === 0
-										? "🥇"
-										: index === 1
-											? "🥈"
-											: index === 2
-												? "🥉"
-												: index + 1
-								}. <@${feur.userId}> - ${feur.amount - 1} feur(s)`
-						)
-						.join("\n")
-				);
-
-			interaction.reply({ embeds: [embed] });
+			interaction.reply({ embeds: [generateEmbed("Feur",feurs)] });
 		}
 
 		// blindtest case
@@ -68,26 +67,7 @@ const command: Command = {
 					flags: MessageFlags.Ephemeral
 				});
 
-			const embed = new EmbedBuilder()
-				.setTitle("Blindtest Leaderboard")
-				.setDescription(
-					blind
-						.map(
-							(blind, index) =>
-								`${
-									index === 0
-										? "🥇"
-										: index === 1
-											? "🥈"
-											: index === 2
-												? "🥉"
-												: index + 1
-								}. <@${blind.userId}> - ${blind.score}`
-						)
-						.join("\n")
-				);
-
-			interaction.reply({ embeds: [embed] });
+			interaction.reply({ embeds: [generateEmbed("Blindtest", blind)] });
 
 		}
 	},
