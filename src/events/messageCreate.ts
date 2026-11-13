@@ -43,7 +43,7 @@ const event: Event = {
 			);
 
 			const randomFunString = funString[Math.floor(Math.random()*funString.length)];
-			const adminMessage = `You saif feur ${feur.amount} time(s). That's amazing!\n${randomFunString}`;
+			const adminMessage = `You said feur ${feur.amount} time(s). That's amazing!\n${randomFunString}`;
 
 			try {
 				if(!isAdmin){
