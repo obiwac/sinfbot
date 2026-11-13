@@ -6,6 +6,7 @@ import {
 	MessageFlags,
 	SlashCommandBuilder,
 	TextChannel,
+	codeBlock,
 	type MessageActionRowComponentBuilder
 } from "discord.js";
 
@@ -54,7 +55,7 @@ const command: Command = {
 				new EmbedBuilder()
 					.setTitle("Error")
 					.setDescription(
-						"Something bad happened. Are you sure your link comes from YouTube?\nIf so, the library is probably down."
+						"Something bad happened. Are you sure your link comes from YouTube?\nIf so, the website is probably down."
 					)
 					.setColor(0x5865f2)
 			],
@@ -73,7 +74,7 @@ const command: Command = {
 
         const embedAdmin = new EmbedBuilder()
             .setTitle("Blindtest")
-            .setDescription(`${requester} has requested a song from \n\`\`\`${showName}\`\`\`\n Here is the link : ${songUrl}`)
+			.setDescription(`${requester} has requested a song from ${codeBlock(showName)}Here is the link ${songUrl} `)
 
         const approveButton = new ButtonBuilder()
 			.setCustomId("approve")
@@ -147,7 +148,7 @@ const command: Command = {
 								new EmbedBuilder()
 									.setTitle("Blindtest approved")
 									.setDescription(
-										`Your Blindtest\n\`\`\`${showName}\`\`\`was approved. It is now available publicly.\n\n> [Click here](${sentBlindtest.url}) to view it`
+										`Your Blindtest${codeBlock(showName)}was approved. It is now available publicly.\n\n> [Click here](${sentBlindtest.url}) to view it`
 									)
 									.setColor(0x00ff00)
 							]
@@ -172,7 +173,7 @@ const command: Command = {
 								new EmbedBuilder()
 									.setTitle("Blindtest rejected")
 									.setDescription(
-										`Your Blindtest\n\`\`\`${showName}\`\`\`has been rejected. It will not be shared publicly.`
+										`Your Blindtest${codeBlock(showName)}has been rejected. It will not be shared publicly.`
 									)
 									.setColor(0xff0000)
 							]
@@ -199,7 +200,7 @@ const command: Command = {
 							new EmbedBuilder()
 								.setTitle("Blindtest rejected")
 								.setDescription(
-									`Your blindtest\n\`\`\`${showName}\`\`\`received no votes, it was therefore rejected. You can however resubmit it with the command /blindtest`
+									`Your blindtest${codeBlock(showName)}received no votes, it was therefore rejected. You can however resubmit it with the command /blindtest`
 								)
 								.setColor(0x808080)
 						]

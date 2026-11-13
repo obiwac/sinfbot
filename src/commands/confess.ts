@@ -7,6 +7,7 @@ import {
 	SlashCommandBuilder,
 	TextChannel,
 	TextInputStyle,
+	codeBlock,
 	type MessageActionRowComponentBuilder
 } from "discord.js";
 import {
@@ -191,7 +192,7 @@ const command: Command = {
 								new EmbedBuilder()
 									.setTitle("Confession approved")
 									.setDescription(
-										`Your confession\n\`\`\`${confessText}\`\`\`was approved. It is now available publicly.\n\n> [Click here](${sentConfession.url}) to view it`
+										`Your confession${codeBlock(confessText)}was approved. It is now available publicly.\n\n> [Click here](${sentConfession.url}) to view it`
 									)
 									.setColor(0x00ff00)
 							]
@@ -216,7 +217,7 @@ const command: Command = {
 								new EmbedBuilder()
 									.setTitle("Confession rejected")
 									.setDescription(
-										`Your confession\n\`\`\`${confessText}\`\`\`has been rejected. It will not be shared publicly.`
+										`Your confession${codeBlock(confessText)}has been rejected. It will not be shared publicly.`
 									)
 									.setColor(0xff0000)
 							]
@@ -247,7 +248,7 @@ const command: Command = {
 								new EmbedBuilder()
 									.setTitle("WARNING")
 									.setDescription(
-										`Your confession\n\`\`\`${confessText}\`\`\`has been rejected and you have been issued a warning. Please note that confessions are **NOT** intended for this purpose. This includes (but not limited to): asking questions about courses (refer to the channel in question), sexual/violent/discriminating content, or stuff that crosses the line of being a bit too edgy. You'll be able to post a new confession in 1h. Please do help keep this a safe space :)`
+										`Your confession${codeBlock(confessText)}has been rejected and you have been issued a warning. Please note that confessions are **NOT** intended for this purpose. This includes (but not limited to): asking questions about courses (refer to the channel in question), sexual/violent/discriminating content, or stuff that crosses the line of being a bit too edgy. You'll be able to post a new confession in 1h. Please do help keep this a safe space :)`
 									)
 									.setColor(0xffa500)
 							]
@@ -272,7 +273,7 @@ const command: Command = {
 							new EmbedBuilder()
 								.setTitle("Confession rejected")
 								.setDescription(
-									`Your confession\n\`\`\`${confessText}\`\`\`received no votes, it was therefore rejected. You can however resubmit it with the command /confess`
+									`Your confession${codeBlock(confessText)}received no votes, it was therefore rejected. You can however resubmit it with the command /confess`
 								)
 								.setColor(0x808080)
 						]
