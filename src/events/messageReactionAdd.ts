@@ -4,9 +4,9 @@
 import { Events, GuildMember, MessageReaction, TextChannel, PermissionFlagsBits } from "discord.js";
 
 import type { Event } from "../types";
+import Blindtest from "../db/models/blindtest";
 import { Contest, ContestMessage, ContestVote } from "../db/models/contest";
 import { getLogger } from "../logger";
-import Blindtest from "../db/models/blindtest";
 
 const pinRoleId = process.env.PIN_ROLE_ID!;
 const pinEmoji = process.env.PIN_EMOJI!;
