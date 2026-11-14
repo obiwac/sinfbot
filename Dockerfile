@@ -27,6 +27,12 @@ COPY --from=install /temp/dev/node_modules node_modules
 COPY . .
 
 FROM base AS release
+
+USER root
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ffmpeg \
+    && rm -rf /var/lib/apt/lists/*
+
 COPY --from=install /temp/prod/node_modules node_modules
 COPY --from=prerelease app/src src
 COPY --from=prerelease app/package.json .
