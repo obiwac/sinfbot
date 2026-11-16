@@ -83,6 +83,7 @@ const event: Event = {
 				{ where: { userId: message.author?.id } }
 			);
 
+			await message.reply("Well done! You got the right answer! 🎉")
 			await thread.leave();
 		}
 
