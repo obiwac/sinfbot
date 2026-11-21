@@ -1,13 +1,19 @@
-import { Events, MessageFlags, type Interaction } from "discord.js";
+import {
+	EmbedBuilder,
+	Events,
+	MessageFlags,
+	type Interaction
+} from "discord.js";
 
 import { getLogger } from "../logger";
 import type { Event } from "../types";
+import { createBlindtest } from "../commands/blindtest";
 
 const logger = getLogger("interactionCreate");
 
 const event: Event = {
 	name: Events.InteractionCreate,
-	execute: (interaction: Interaction) => {
+	execute: async (interaction: Interaction) => {
 		if (interaction.isChatInputCommand()) {
 			const command = interaction.client.commands.get(
 				interaction.commandName
@@ -75,6 +81,54 @@ const event: Event = {
 					"Could not process modal"
 				);
 			}
+
+			// Accept old Blindtest requests (in case the Blindtest times out due to too many requests)
+		} else if (
+			interaction.isButton() &&
+			interaction.customId === "resubmit"
+		) {
+			const embed = interaction.message.embeds[0];
+			const description = embed.description?.split(" ");
+
+			if (!description) return;
+
+			const requester = await interaction.client.users.fetch(
+				description[0].slice(2, -1)
+			);
+			const songUrl = description.at(11);
+			const showName = description.at(6);
+			const start = Number(description.at(-2));
+
+			if (!songUrl) return;
+
+			await interaction.message.edit({
+				embeds: [
+					EmbedBuilder.from(embed)
+						.setTitle("Blindtest approved")
+						.setColor(0x00ff00)
+				],
+				components: []
+			});
+
+			const sentBlindtest = await createBlindtest(
+				songUrl,
+				requester,
+				interaction.client,
+				start
+			);
+
+			await requester
+				.send({
+					embeds: [
+						new EmbedBuilder()
+							.setTitle("Blindtest approved")
+							.setDescription(
+								`Your Blindtest ${showName} has finally been approved. It is now available publicly.\n\n> [Click here](${sentBlindtest.url}) to view it`
+							)
+							.setColor(0x00ff00)
+					]
+				})
+				.catch(() => undefined);
 		}
 	}
 };

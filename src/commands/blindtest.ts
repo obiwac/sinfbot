@@ -7,6 +7,8 @@ import {
 	SlashCommandBuilder,
 	TextChannel,
 	codeBlock,
+	Client,
+	User,
 	type MessageActionRowComponentBuilder
 } from "discord.js";
 
@@ -18,6 +20,57 @@ import { createWriteStream } from "node:fs";
 import { unlink } from "node:fs/promises";
 import { Quality, Ytdl } from "@distube/ytdl-core";
 import { ffmpeg } from "ffmpeg";
+
+export async function createBlindtest(
+	songUrl: string,
+	requester: User,
+	client: Client,
+	start: number
+) {
+	const ytb = new Ytdl();
+	let sentBlindtest;
+
+	const blindtestChannel = (await client.channels.fetch(
+		process.env.BLINDTEST_CHANNEL_ID!
+	)) as TextChannel;
+
+	const info = await ytb.getInfo(songUrl);
+
+	const startMS = start > info.videoDetails.lengthSeconds ? 0 : start;
+
+	await pipeline(
+		ytb.download(info, {
+			quality: Quality.HighestAudio,
+			filter: { hasAudio: true, hasVideo: false }
+		}),
+		createWriteStream("./src/data/audio.mp3")
+	);
+
+	// trim it at 1 min
+	const audio = await ffmpeg("./src/data/audio.mp3");
+	await audio
+		.setVideoStartTime(startMS)
+		.setVideoDuration(60)
+		.save("./src/data/newAudio.mp3");
+
+	// send it to the channel
+	sentBlindtest = await blindtestChannel.send({
+		content: `<@&1572322388316786729>, ${requester} has submitted a new song for you to guess!`,
+		files: [
+			{
+				attachment: "./src/data/newAudio.mp3",
+				name: "audio.mp3"
+			}
+		]
+	});
+	await sentBlindtest.startThread({ name: "Answer" });
+
+	// remove the files
+	unlink("./src/data/audio.mp3");
+	unlink("./src/data/newAudio.mp3");
+
+	return sentBlindtest;
+}
 
 const vote_minutes = Number(process.env.BLINDTEST_VOTE_MINUTES);
 
@@ -38,11 +91,20 @@ const command: Command = {
 				.setName("link")
 				.setDescription("The youtube link of you requested song")
 				.setRequired(true)
+		)
+		.addNumberOption(option =>
+			option
+				.setName("start")
+				.setDescription(
+					"The timecode in seconds at which you want the song to start (e.g. 90 = start at 1:30)"
+				)
+				.setRequired(false)
 		),
 
 	execute: async interaction => {
 		const songUrl = interaction.options.getString("link", true);
 		const showName = interaction.options.getString("show", true);
+		const start = interaction.options.getNumber("start", false) ?? 0;
 		const requester = interaction.user;
 		const ytb = new Ytdl();
 
@@ -75,7 +137,7 @@ const command: Command = {
 		const embedAdmin = new EmbedBuilder()
 			.setTitle("Blindtest")
 			.setDescription(
-				`${requester} has requested a song from ${codeBlock(showName)}Here is the link ${songUrl} `
+				`${requester} has requested a song from ${codeBlock(showName)} Here is the link ${songUrl} \n start at ${start} s`
 			);
 
 		const approveButton = new ButtonBuilder()
@@ -89,6 +151,12 @@ const command: Command = {
 			.setLabel("Reject")
 			.setStyle(ButtonStyle.Secondary)
 			.setEmoji({ name: "❌" });
+
+		const reSubmitButton = new ButtonBuilder()
+			.setCustomId("resubmit")
+			.setLabel("ReSubmit")
+			.setStyle(ButtonStyle.Primary)
+			.setEmoji({ name: "🔁" });
 
 		const actionRow =
 			new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(
@@ -112,8 +180,6 @@ const command: Command = {
 
 			switch (i.customId) {
 				case "approve":
-					let sentBlindtest;
-
 					vote.edit({
 						embeds: [
 							embedAdmin
@@ -123,36 +189,12 @@ const command: Command = {
 						components: []
 					});
 
-					// download the music
-					const info = await ytb.getInfo(songUrl);
-					await pipeline(
-						ytb.download(info, {
-							quality: Quality.HighestAudio,
-							filter: { hasAudio: true, hasVideo: false }
-						}),
-						createWriteStream("./src/data/audio.mp3")
+					const sentBlindtest = await createBlindtest(
+						songUrl,
+						requester,
+						interaction.client,
+						start
 					);
-
-					// trim it at 1 min
-					const audio = await ffmpeg("./src/data/audio.mp3");
-					await audio
-						.setVideoDuration(60)
-						.save("./src/data/newAudio.mp3");
-
-					// send it to the channel
-					sentBlindtest = await blindtestChannel.send({
-						files: [
-							{
-								attachment: "./src/data/newAudio.mp3",
-								name: "audio.mp3"
-							}
-						]
-					});
-					await sentBlindtest.startThread({ name: "Answer" });
-
-					// remove the files
-					unlink("./src/data/audio.mp3");
-					unlink("./src/data/newAudio.mp3");
 
 					interaction.user
 						.send({
@@ -199,25 +241,16 @@ const command: Command = {
 		collector.on("end", async (_, reason) => {
 			if (reason === "time") {
 				// Vote timed out
-				vote.edit({
+				await vote.edit({
 					embeds: [
 						embedAdmin.setTitle("Vote timed out").setColor(0x808080)
 					],
-					components: []
+					components: [
+						new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(
+							reSubmitButton
+						)
+					]
 				});
-
-				interaction.user
-					.send({
-						embeds: [
-							new EmbedBuilder()
-								.setTitle("Blindtest rejected")
-								.setDescription(
-									`Your blindtest${codeBlock(showName)}received no votes, it was therefore rejected. You can however resubmit it with the command /blindtest`
-								)
-								.setColor(0x808080)
-						]
-					})
-					.catch(() => undefined);
 			}
 		});
 
